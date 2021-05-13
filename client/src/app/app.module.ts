@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { FormsModule } from '@angular/forms';
+import { CoreModule } from './core/core.module';
 const socketioConfig: SocketIoConfig = {
   url: 'http://localhost:4000',
   options: {},
@@ -18,6 +19,7 @@ const socketioConfig: SocketIoConfig = {
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
+    CoreModule,
     SocketIoModule.forRoot(socketioConfig),
   ],
   providers: [],
