@@ -1,4 +1,62 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+  background-color: var(--app-light);
+  color: var(--app-dark);
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.app-link {
+  text-decoration: none;
+  color: var(--app-theme);
+  border-radius: 0.25em;
+  cursor: pointer;
+}
+.app-link:hover {
+  color: var(--app-theme);
+  background-color: var(--app-theme-dark);
+  border-radius: 0.25em;
+  cursor: pointer;
+}
+.app-btn {
+  color: var(--app-theme);
+  background-color: var(--app-theme-light);
+  border-radius: 0.25em;
+  border: 0.15em solid var(--app-theme);
+}
+.app-btn:hover {
+  color: var(--app-theme);
+  background-color: var(--app-theme-dark);
+  border-radius: 0.25em;
+  border: 0.15em solid var(--app-theme);
+}
+body::-webkit-scrollbar {
+  width: 20px;
+  border-radius: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--app-theme);
+  border-radius: 5px;
+}
+div::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 5px;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: var(--app-theme);
+  border-radius: 5px;
+}
+:root {
+  --app-theme-light: #119da4ff;
+  --app-theme: #0c7489ff;
+  --app-theme-dark: #13505bff;
+  --app-dark: #040404ff;
+  --app-light: #d7d9ceff;
+  --app-border: 0.25em;
+}

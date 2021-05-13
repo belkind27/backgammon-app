@@ -1,0 +1,32 @@
+<div
+  [@openCloseMenu]="isShown ? 'open' : 'closed'"
+  id="friends-container"
+  class="rounded shadow-lg"
+>
+  <div
+    *ngFor="let friend of friends"
+    class="row app-link py-1 m-0"
+    [matMenuTriggerFor]="menu"
+  >
+    <div class="col-2 text-center">
+      <span class="dot" [ngClass]="{ connected: friend.isConnected }"></span>
+    </div>
+    <div class="col p-0">{{ friend.name }}</div>
+    <mat-menu #menu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="playWithFriend(friend)">
+        Ask {{ friend.name }} To Play
+      </button>
+      <button mat-menu-item (click)="openChat(friend)">
+        Send {{ friend.name }} A Message
+      </button>
+      <button mat-menu-item (click)="unfriend(friend)">
+        Unfriend {{ friend.name }}
+      </button>
+    </mat-menu>
+  </div>
+</div>
+<div [@openCloseBtn]="isShown ? 'open' : 'closed'" id="btn">
+  <a class="rounded p-3 shadow-lg" (click)="btnClick()" id="btn-link">
+    <i class="fas fa-users fa-2x align-middle"></i>
+  </a>
+</div>

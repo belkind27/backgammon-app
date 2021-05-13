@@ -1,0 +1,39 @@
+#friends-container {
+  position: fixed;
+  top: 18.5%;
+  left: 0;
+  z-index: 1000;
+  width: 250px;
+  height: 50vh;
+  overflow: auto;
+  background-color: var(--app-theme-light);
+  border: var(--app-border) solid var(--app-theme);
+}
+#btn {
+  position: fixed;
+  top: 20%;
+  z-index: 1000;
+}
+#btn-link {
+  color: var(--app-theme);
+  background-color: var(--app-theme-light);
+  cursor: pointer;
+  border: var(--app-border) solid var(--app-theme);
+}
+#btn-link:hover {
+  color: var(--app-theme);
+  background-color: var(--app-theme-dark);
+}
+.dot {
+  height: 15px;
+  width: 15px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+.connected {
+  background-color: var(--app-theme);
+}
+.friend-div {
+  width: 100%;
+}
