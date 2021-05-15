@@ -1,0 +1,25 @@
+.login-container {
+  width: 40vw;
+  height: 40vh;
+  background-color: var(--app-theme);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 1rem;
+}
+form {
+  width: 80%;
+}
+h3 {
+  padding: 0.5rem 4rem 0.5rem;
+}
+button {
+  border-radius: 1rem;
+}
+button:hover {
+  border-radius: 1rem;
+}
+input {
+  height: 3rem;
+}

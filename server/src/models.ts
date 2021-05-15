@@ -1,8 +1,12 @@
-export interface User {
-  id: number;
-  name: string;
-  friends: User[];
-  password: string;
+
+export class User {
+  id!: string;
+  name!: string;
+  password!: string;
+  friends!: User[];
+  wins!: number;
+  loses!: number;
+  constructor() {}
 }
 
 export interface Message {
