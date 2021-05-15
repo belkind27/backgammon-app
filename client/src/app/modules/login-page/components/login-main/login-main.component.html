@@ -1,0 +1,41 @@
+<div class="login-container shadow-lg">
+  <div class="text-center"><h1>Login</h1></div>
+  <div class="text-center font-text-bold">
+    If you're Not Registered By Entering Your Info you'll Be Automatically
+    Registered
+  </div>
+  <form #form="ngForm" class="container" (ngSubmit)="submit()">
+    <div class="d-flex flex-column">
+      <input
+        type="text"
+        class="form-control my-2"
+        placeholder="Name"
+        [(ngModel)]="model.name"
+        #name="ngModel"
+        required
+        [ngClass]="{
+          'is-invalid': name.touched && name.invalid,
+          'is-valid': name.valid
+        }"
+        name="title"
+      />
+      <input
+        class="form-control my-5"
+        placeholder="Password"
+        [(ngModel)]="model.password"
+        #password="ngModel"
+        required
+        [ngClass]="{
+          'is-invalid': password.invalid && password.touched,
+          'is-valid': password.valid
+        }"
+        name="content"
+      />
+    </div>
+    <div class="d-flex justify-content-center">
+      <button type="submit" class="app-btn" [disabled]="!form.valid">
+        <h3>Login</h3>
+      </button>
+    </div>
+  </form>
+</div>

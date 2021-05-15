@@ -13,10 +13,16 @@
       <div class="chat-window d-flex flex-column" *ngIf="chat.show">
         <div class="d-flex justify-content-between chat-title">
           <span class="align-self-center">{{ chat.friend.name }}</span>
-          <i
-            class="far fa-times-circle fa-2x app-link"
-            (click)="deleteChat(chat)"
-          ></i>
+          <div>
+            <i
+              class="fas fa-window-minimize app-link mx-3"
+              (click)="chat.show = !chat.show"
+            ></i>
+            <i
+              class="far fa-times-circle fa-2x app-link"
+              (click)="deleteChat(chat)"
+            ></i>
+          </div>
         </div>
         <div class="chat-body pt-1">
           <div

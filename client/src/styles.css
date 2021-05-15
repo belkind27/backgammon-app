@@ -27,30 +27,32 @@ body {
   background-color: var(--app-theme-light);
   border-radius: 0.25em;
   border: 0.15em solid var(--app-theme);
+  cursor: pointer;
 }
 .app-btn:hover {
   color: var(--app-theme);
   background-color: var(--app-theme-dark);
   border-radius: 0.25em;
   border: 0.15em solid var(--app-theme);
+  cursor: pointer;
 }
 body::-webkit-scrollbar {
   width: 20px;
-  border-radius: 5px;
+  border-radius: 2px;
 }
 
 body::-webkit-scrollbar-thumb {
   background-color: var(--app-theme);
-  border-radius: 5px;
+  border-radius: 2px;
 }
 div::-webkit-scrollbar {
   width: 10px;
-  border-radius: 5px;
+  border-radius: 2px;
 }
 
 div::-webkit-scrollbar-thumb {
   background-color: var(--app-theme);
-  border-radius: 5px;
+  border-radius: 2px;
 }
 :root {
   --app-theme-light: #119da4ff;
@@ -58,5 +60,5 @@ div::-webkit-scrollbar-thumb {
   --app-theme-dark: #13505bff;
   --app-dark: #040404ff;
   --app-light: #d7d9ceff;
-  --app-border: 0.25em;
+  --app-border: 0.1em;
 }
