@@ -1,15 +1,18 @@
 import express from "express";
 import cors from "cors";
 import { initServerWithSocket } from "../src/libs/socket";
+import { loginController } from "./controllers/login.controller";
+
+const app = express();
+app.use(cors());
+app.use(loginController);
+initServerWithSocket(app);
+
 
 const mongoose = require('mongoose');
 const dialogModel = require('./libs/dbmodels/dialog');
 const userModel = require('./libs/dbmodels/user');
 
-
-const app = express();
-app.use(cors());
-initServerWithSocket(app);
 
 const dbURI = 'mongodb+srv://gameguy:gameguy100@cluster0.f6bsm.mongodb.net/BackgammonDB?retryWrites=true&w=majority';
 mongoose.connect(dbURI , { useNewUrlParser : true , useUnifiedTopology : true})
@@ -19,7 +22,3 @@ mongoose.connect(dbURI , { useNewUrlParser : true , useUnifiedTopology : true})
        .catch(err => {
          console.error('Database connection error')
        })
-
-
-
-       
