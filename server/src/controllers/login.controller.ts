@@ -13,15 +13,23 @@ loginController.post("/Login", (req, res) => {
   const name1 = req.body.userName
   const password1 = req.body.userPassword
 
+  // creating a sample of the user
+  const usersample = new userModel({
+    name: name1,
+    password1: password1
+  });
+
+
+  function checkIfUserExist() : Boolean{
+   User.find()
+  }
+
   // creating new user if it does not exist
   function createuser(){
-    const user = new userModel({
-      name: name1,
-      password1: password1
-    });
-    user.save()
+   
+    usersample.save()
       .then((result) => {
-        res.send(result)
+        console.log(result)
       })
       .catch((err) =>{
         console.log(err);
