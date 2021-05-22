@@ -52,3 +52,8 @@
   border: black solid 1px;
   display: inline-block;
 }
+#end-button-container{
+  position: fixed;
+  bottom: 5vh;
+  left: 50%;
+}

@@ -37,4 +37,5 @@
     (dragstart)="onDrag($event, jailIndex)"
   ></div>
 </div>
+<div id="end-button-container"> <button (click)="endTurn()" class="app-btn"> End Turn</button></div>
 <app-dice (resultsEmitter)="getDiceRes($event)" *ngIf="isMyTurn"></app-dice>
