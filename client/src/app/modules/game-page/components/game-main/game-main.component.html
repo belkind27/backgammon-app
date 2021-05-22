@@ -1,0 +1,40 @@
+<div class="game-container container">
+  <div class="row board">
+    <div
+      *ngFor="let slot of gameBoardView; index as i"
+      class="col-1 game-slot d-flex"
+      (click)="clickSlot(i)"
+      option="false"
+      (dragover)="allowDrop($event)"
+      (drop)="onDrop($event, i)"
+      id="{{ i }}"
+      [ngClass]="{
+        'flex-column-reverse': i > 11,
+        'flex-column': i < 12
+      }"
+    >
+      <div
+        *ngFor="let player of slot"
+        [ngClass]="{
+          black: player.color === 'black',
+          white: player.color === 'white'
+        }"
+        [draggable]="isDraggable(player.color)"
+        (dragstart)="onDrag($event, i)"
+        (dblclick)="removePlayer(i)"
+      ></div>
+    </div>
+  </div>
+</div>
+<div id="jail">
+  <div
+    *ngFor="let player of jail"
+    [ngClass]="{
+      black: player.color === 'black',
+      white: player.color === 'white'
+    }"
+    [draggable]="isDraggable(player.color)"
+    (dragstart)="onDrag($event, jailIndex)"
+  ></div>
+</div>
+<app-dice (resultsEmitter)="getDiceRes($event)" *ngIf="isMyTurn"></app-dice>

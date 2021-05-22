@@ -8,6 +8,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from './core/core.module';
 import { LoginPageModule } from './modules/login-page/login-page.module';
+import { GamePageModule } from './modules/game-page/game-page.module';
 const socketioConfig: SocketIoConfig = {
   url: 'http://localhost:4000',
   options: {},
@@ -22,6 +23,7 @@ const socketioConfig: SocketIoConfig = {
     FormsModule,
     CoreModule,
     LoginPageModule,
+    GamePageModule,
     SocketIoModule.forRoot(socketioConfig),
   ],
   providers: [],
