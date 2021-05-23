@@ -1,4 +1,4 @@
-<div class="container-fluid" id="chat-bar">
+<div class="container-fluid" id="chat-bar" *ngIf="isShow">
   <div class="position-relative d-flex flex-row">
     <div *ngFor="let chat of chats">
       <div class="d-flex flex-row mx-2">
