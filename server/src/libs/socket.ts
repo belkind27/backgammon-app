@@ -38,6 +38,9 @@ export const initServerWithSocket = (app: any) => {
     socket.on(Event.GAME_ENDED, (room: string) => {
       socket.leave(room);
     });
+    socket.on(Event.MESSAGE){
+    }
+
   });
   httpServer.listen(SERVER_PORT);
 };

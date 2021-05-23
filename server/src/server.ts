@@ -2,14 +2,13 @@ import express from "express";
 import cors from "cors";
 import { initServerWithSocket } from "../src/libs/socket";
 import { loginController } from "./controllers/login.controller";
-import { Mongoose } from "mongoose";
-import { Dialog } from "./libs/dbmodels/dialog";
-import { User } from "./libs/dbmodels/user";
+const mongoose =  require('mongoose');
+import { Dialog , IDialog } from "./libs/dbmodels/dialog";
+import { User, IUser } from "./libs/dbmodels/user";
+
 const app = express();
 app.use(cors());
 app.use(loginController);
-initServerWithSocket(app);
-// jwt.decode(token)
 const dbURI =
   "mongodb+srv://gameguy:gameguy100@cluster0.f6bsm.mongodb.net/BackgammonDB?retryWrites=true&w=majority";
 mongoose
@@ -20,8 +19,13 @@ mongoose
   .catch((err: any) => {
     console.log(err);
   });
-app.get("/find-all-users", (req, res) => {
-  User.find().then((result) => {
-    res.send(result);
-  });
+initServerWithSocket(app);
+// jwt.decode(token)
+
+
+
+app.get("/find-all-users", async (req, res) => {
+  const users: Array<IUser> = await User.find();  
+  res.status(202).send(users);
 });
+
