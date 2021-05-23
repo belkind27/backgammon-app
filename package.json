@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/mongoose": "^5.10.5",
+    "mongoose": "^5.12.8",
+    "ts-mongoose": "^0.0.24",
+    "validator": "^13.6.0"
+  }
+}
