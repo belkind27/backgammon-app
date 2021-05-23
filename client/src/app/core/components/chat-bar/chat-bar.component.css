@@ -1,0 +1,53 @@
+#chat-bar {
+  background-color: var(--app-theme-light);
+  border-top: var(--app-border) solid var(--app-theme);
+  position: fixed;
+  bottom: 0;
+  font-size: large;
+}
+.chat-tab {
+  padding: 0.25em 5em 0.25em 5em;
+}
+.chat-window {
+  width: 25vw;
+  height: 45vh;
+  position: absolute;
+  top: -45vh;
+  background-color: var(--app-light);
+  border: var(--app-border) solid var(--app-theme);
+  border-radius: 1rem 1rem 0rem 0em;
+}
+.chat-title {
+  background-color: var(--app-theme-light);
+  color: var(--app-theme);
+  font-size: large;
+  border-radius: 1rem 1rem 0rem 0em;
+  border: 1rem 1rem 0rem 1em;
+  border-color: var(--app-theme-light);
+
+  border-bottom: var(--app-border) solid var(--app-theme);
+}
+.chat-body {
+  height: 100%;
+  overflow: auto;
+  position: relative;
+}
+.chat-message {
+  width: 40%;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  margin-top: 0.25em;
+}
+.self {
+  border-radius: 0.2em 0 0 0.2em;
+  background-color: var(--app-theme-dark);
+}
+.friend {
+  background-color: var(--app-theme-light);
+  border-radius: 0em 0.2em 0.2em 0;
+}
+input {
+  width: 83%;
+  display: inline;
+}

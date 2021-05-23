@@ -1,0 +1,7 @@
+#logo {
+  font-size: xx-large;
+}
+nav {
+  background-color: var(--app-theme-light);
+  border-bottom: var(--app-border) solid var(--app-theme);
+}

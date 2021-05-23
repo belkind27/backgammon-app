@@ -7,6 +7,7 @@ const app = express();
 app.use(cors());
 app.use(loginController);
 initServerWithSocket(app);
+<<<<<<< HEAD
 
 
 const mongoose = require('mongoose');
@@ -32,3 +33,5 @@ app.get('/find-all-users', (req,res) =>{
            res.send(result)
        })
 } )       
+=======
+>>>>>>> main
