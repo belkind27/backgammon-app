@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { CoreModule } from './core/core.module';
 import { LoginPageModule } from './modules/login-page/login-page.module';
 import { GamePageModule } from './modules/game-page/game-page.module';
+import { HomePageModule } from './modules/home-page/home-page.module';
 const socketioConfig: SocketIoConfig = {
   url: 'http://localhost:4000',
   options: {},
@@ -24,6 +25,7 @@ const socketioConfig: SocketIoConfig = {
     CoreModule,
     LoginPageModule,
     GamePageModule,
+    HomePageModule,
     SocketIoModule.forRoot(socketioConfig),
   ],
   providers: [],

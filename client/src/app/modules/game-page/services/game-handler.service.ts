@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Color, Player } from '../components/game-main/game-main.component';
+import { Observable } from 'rxjs';
+import { SocketHandlerService } from 'src/app/core/services/socket-handler.service';
+import { Color, Player } from '../models';
 
 @Injectable()
 export class GameHandlerService {
   // black needs to move from index 23 to 0
   // white needs to move from index 0 to 23
 
-  constructor() {}
+  constructor(private socketService: SocketHandlerService) {}
   createNewBoard(): Player[][] {
     const board = [[{ color: Color.White }, { color: Color.White }]];
     for (let index = 1; index < 24; index++) {
@@ -70,6 +72,20 @@ export class GameHandlerService {
       }
     }
     return board;
+  }
+  getPlayerColor(): Color {
+    const config = sessionStorage.getItem('game-config');
+    if (config) {
+      const color = JSON.parse(config).yourColor;
+      return color as Color;
+    }
+    return Color.Black;
+  }
+  getTurn(): Observable<any> {
+    return this.socketService.getTurn();
+  }
+  nextTurn(board: Player[][], jail: Player[]): void {
+    this.socketService.sendTurn(board, jail);
   }
   convertLogicBoardToView(
     playerColor: Color,
@@ -161,5 +177,8 @@ export class GameHandlerService {
     } else {
       return 24 - diceRes;
     }
+  }
+  gameEnded(): void {
+    this.socketService.gameEnded();
   }
 }
