@@ -1,12 +1,12 @@
 import { strict } from "assert/strict";
-
-let mongoose = require('mongoose');
-const { Schema } = mongoose;
+import mongoose, { Schema, Document } from 'mongoose';
+//let mongoose = require('mongoose');
+//const { Schema } = mongoose;
 
 //const server = '127.0.0.1:27017'; // REPLACE WITH YOUR DB SERVER
 //const database = 'BackgammonDB';      // REPLACE WITH YOUR DB NAME
 
-const dbURI = 'mongodb+srv://gameguy:gameguy100@cluster0.f6bsm.mongodb.net/BackgammonDB?retryWrites=true&w=majority'
+// const dbURI = 'mongodb+srv://gameguy:gameguy100@cluster0.f6bsm.mongodb.net/BackgammonDB?retryWrites=true&w=majority'
 
 /*
 class Database {
@@ -30,14 +30,15 @@ _connect() {
 */
 
 const userSchema = new Schema({
+    id : Schema.Types.ObjectId,
     name:  String, 
     password:   String,
-    friendsIdList: [{ id : String }]   
+    friendsIdList: [{ id : Schema.Types.ObjectId }]   
   });
 
   
-  const UserModel = mongoose.model("Users", userSchema);
-  module.exports = UserModel;
+ /* const User = mongoose.model("User", userSchema);
+  module.exports = User; */
 
-
+  export default mongoose.model('User', userSchema);
 // module.exports = new Database()

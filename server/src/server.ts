@@ -10,9 +10,11 @@ initServerWithSocket(app);
 
 
 const mongoose = require('mongoose');
-const dialogModel = require('./libs/dbmodels/dialog');
-const userModel = require('./libs/dbmodels/user');
+const Dialog = require('./libs/dbmodels/dialog');
+const User= require('./libs/dbmodels/user');
 
+
+// jwt.decode(token)
 
 const dbURI = 'mongodb+srv://gameguy:gameguy100@cluster0.f6bsm.mongodb.net/BackgammonDB?retryWrites=true&w=majority';
 mongoose.connect(dbURI , { useNewUrlParser : true , useUnifiedTopology : true})
@@ -20,5 +22,13 @@ mongoose.connect(dbURI , { useNewUrlParser : true , useUnifiedTopology : true})
          console.log('Database connection successful')
        })
        .catch(err => {
-         console.error('Database connection error')
+         console.log(err)
        })
+
+
+app.get('/find-all-users', (req,res) =>{
+    User.find()
+       .then((result) => {
+           res.send(result)
+       })
+} )       

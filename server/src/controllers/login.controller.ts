@@ -1,8 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { JWT_KEY } from "../constants";
-import { User } from "../models";
-const userModel = require('./libs/dbmodels/user');
+import { Usermodel } from "../models";
+const User = require('./libs/dbmodels/user');
 
 const loginController = express.Router();
 
@@ -14,14 +14,15 @@ loginController.post("/Login", (req, res) => {
   const password1 = req.body.userPassword
 
   // creating a sample of the user
-  const usersample = new userModel({
+  const usersample = new User({
+    id: new mongoose.Types.ObjectId();
     name: name1,
     password1: password1
   });
-
+  
 
   function checkIfUserExist() : Boolean{
-   User.find()
+   User.findById
   }
 
   // creating new user if it does not exist
