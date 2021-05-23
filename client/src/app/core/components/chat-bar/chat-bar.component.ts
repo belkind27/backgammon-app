@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GetJwtService } from '../../services/get-jwt.service';
 
 @Component({
   selector: 'app-chat-bar',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat-bar.component.css'],
 })
 export class ChatBarComponent implements OnInit {
+  isShow = false;
   chats = [
     {
       show: false,
@@ -44,9 +46,15 @@ export class ChatBarComponent implements OnInit {
       ],
     },
   ];
-  constructor() {}
+  constructor(private jwtService: GetJwtService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const token = this.jwtService.getToken();
+    if (token) {
+      this.isShow = true;
+    }
+    this.isShow = false;
+  }
   deleteChat(chatToDelete: any): void {
     const deleteId = chatToDelete.friend.id as number;
     this.chats = this.chats.filter((chat) => {

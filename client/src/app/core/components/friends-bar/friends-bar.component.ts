@@ -6,6 +6,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { GetJwtService } from '../../services/get-jwt.service';
 
 @Component({
   selector: 'app-friends-bar',
@@ -48,7 +49,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FriendsBarComponent implements OnInit {
   isShown!: boolean;
-  constructor() {}
+  isShow = false;
   friends = [
     { name: 'friend 1', isConnected: true },
     { name: 'friend 2', isConnected: true },
@@ -68,7 +69,15 @@ export class FriendsBarComponent implements OnInit {
     { name: 'friend 16', isConnected: false },
     { name: 'friend 17', isConnected: true },
   ];
-  ngOnInit(): void {}
+  constructor(private jwtService: GetJwtService) {}
+
+  ngOnInit(): void {
+    const token = this.jwtService.getToken();
+    if (token) {
+      this.isShow = true;
+    }
+    this.isShow = false;
+  }
   btnClick(): void {
     this.isShown ? (this.isShown = false) : (this.isShown = true);
   }
