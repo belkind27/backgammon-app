@@ -25,4 +25,5 @@ export enum Event {
   TURN_PLAYED = "turnPlayed",
   PLAY_WITH_FRIEND = "playWithFriend",
   PLAY_WITH_RANDOM = "playWithRandom",
+  GAME_ENDED = "gameEnded"
 }

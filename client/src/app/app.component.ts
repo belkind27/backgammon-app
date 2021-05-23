@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +6,6 @@ import { Socket } from 'ngx-socket-io';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  constructor(private socket: Socket) {}
+  constructor() {}
   ngOnInit(): void {}
 }

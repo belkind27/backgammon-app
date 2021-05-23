@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Color, Dices, Player } from '../../models';
 import { GameHandlerService } from '../../services/game-handler.service';
-import { Dices } from '../dice/dice.component';
 
 @Component({
   selector: 'app-game-main',
@@ -16,8 +16,8 @@ export class GameMainComponent implements OnInit {
   gameBoardLogic!: Player[][];
   gameBoardView!: Player[][];
   jail!: Player[];
-  playerColor = Color.Black;
-  isMyTurn = true;
+  playerColor!: Color;
+  isMyTurn!: boolean;
   diceRes!: Dices;
   slotToMoveFrom!: number;
   jailIndex!: number;
@@ -37,10 +37,23 @@ export class GameMainComponent implements OnInit {
   }
   initGame(): void {
     this.gameBoardLogic = this.gameService.createNewBoard();
+    this.playerColor = this.gameService.getPlayerColor();
+    this.gameService.getTurn().subscribe((res) => {
+      this.isMyTurn = true;
+      if (res.gameBoard.length === 0) {
+        alert('You Lost');
+        this.gameService.gameEnded();
+      }
+      this.gameBoardLogic = res.gameBoard;
+      this.jail = res.gameJail;
+      this.convertToHtmlView();
+    });
     if (this.playerColor === Color.Black) {
       this.jailIndex = 24;
+      this.isMyTurn = true;
     } else {
       this.jailIndex = -1;
+      this.isMyTurn = false;
     }
     this.jail = [];
     this.isInFinish = true;
@@ -192,6 +205,9 @@ export class GameMainComponent implements OnInit {
           this.gameService.convertToLogicIndex(originalIndex, this.playerColor)
         );
       }
+      this.isOppPlayerEaten(
+        this.gameService.convertToLogicIndex(slotIndex, this.playerColor)
+      );
       this.convertToHtmlView();
       this.isInFinishPase();
     }
@@ -200,7 +216,8 @@ export class GameMainComponent implements OnInit {
     e.preventDefault();
   }
   endTurn(): void {
-    // this.isMyTurn = false;
+    this.isMyTurn = false;
+    this.gameService.nextTurn(this.gameBoardLogic, this.jail);
   }
   isOppPlayerEaten(logicIndex: number): void {
     // checks if the slot the player just moved to have 1 or more opp players
@@ -335,6 +352,7 @@ export class GameMainComponent implements OnInit {
           }
         }
       }
+      this.isPlayerWon();
     }
   }
   deletePlayerFromSlot(slotIndex: number): void {
@@ -347,11 +365,11 @@ export class GameMainComponent implements OnInit {
       }
     }
   }
-}
-export interface Player {
-  color: Color;
-}
-export enum Color {
-  Black = 'black',
-  White = 'white',
+  isPlayerWon(): void {
+    if (this.numOfPlayersRemove === 15) {
+      alert('You Won!!!');
+      this.gameService.nextTurn([], []);
+      this.gameService.gameEnded();
+    }
+  }
 }

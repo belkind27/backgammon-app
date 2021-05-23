@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Dices } from '../../models';
 
 @Component({
   selector: 'app-dice',
@@ -11,7 +12,7 @@ export class DiceComponent implements OnInit {
   isAbleToRoll = true;
   ngOnInit(): void {}
   rollDice(): void {
-   // this.isAbleToRoll = false;
+    this.isAbleToRoll = false;
     const dice = document.querySelectorAll('.die-list');
     const diceRes: number[] = [];
     dice.forEach((die) => {
@@ -47,10 +48,4 @@ export class DiceComponent implements OnInit {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-}
-export interface Dices {
-  dice1: number;
-  dice2: number;
-  db1: number;
-  db2: number;
 }
