@@ -32,10 +32,8 @@ userController.get("/find-all-users", async (req, res) => {
         users.filter(userelement => userelement.id !== friendelement.id)
     });          
     res.status(202).send(users);
-  });
+});
   
-
-
 
 userController.get("/find-user", async (req, res) => {
     const token : string = req.headers.authorization?.split(" ")[1]!;   
