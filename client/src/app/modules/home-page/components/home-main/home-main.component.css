@@ -1,6 +1,9 @@
 button {
   padding: 2rem;
 }
+a {
+  text-decoration: none;
+}
 #spinner-container {
   position: fixed;
   top: 40%;

@@ -1,0 +1,22 @@
+<div class="container pt-5">
+  <div class="d-flex justify-content-end pb-5">
+    <a class="app-btn" [routerLink]="['/Home']"> Back To Menu </a>
+  </div>
+  <input
+    type="text"
+    placeholder="Search New Friends"
+    class="form-control"
+    #Input
+    (input)="InputChange(Input.value)"
+  />
+  <ul>
+    <li *ngFor="let friend of filteredNames">
+      <div class="d-flex justify-content-between p-1">
+        <span> {{ friend.name }} </span>
+        <button class="app-btn" (click)="addFriend(friend, Input)">
+          Add Friend
+        </button>
+      </div>
+    </li>
+  </ul>
+</div>
