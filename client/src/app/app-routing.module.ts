@@ -20,6 +20,7 @@ const routes: Routes = [
   {
     path: `FindFriends`,
     component: FindFriendsMainComponent,
+    canActivate: [GetJwtService],
   },
   { path: `**`, component: HomeMainComponent, canActivate: [GetJwtService] },
   { path: ``, component: HomeMainComponent, canActivate: [GetJwtService] },
