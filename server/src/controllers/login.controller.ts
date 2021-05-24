@@ -1,10 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { JWT_KEY } from "../constants";
-import { Usermodel } from "../models";
-const User = require('./libs/dbmodels/user');
 import {  Schema } from 'mongoose';
-import {  IUser } from "../libs/dbmodels/user";
+import {  IUser , User } from "../libs/dbmodels/user";
 
 
 

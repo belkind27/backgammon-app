@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { initServerWithSocket } from "../src/libs/socket";
 import { loginController } from "./controllers/login.controller";
+import { userController } from "./controllers/userController"
 const mongoose =  require('mongoose');
 import { Dialog , IDialog } from "./libs/dbmodels/dialog";
 import { User, IUser } from "./libs/dbmodels/user";
@@ -9,6 +10,7 @@ import { User, IUser } from "./libs/dbmodels/user";
 const app = express();
 app.use(cors());
 app.use(loginController);
+app.use(userController);
 const dbURI =
   "mongodb+srv://gameguy:gameguy100@cluster0.f6bsm.mongodb.net/BackgammonDB?retryWrites=true&w=majority";
 mongoose
