@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { GetJwtService } from '../../services/get-jwt.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class TopBarComponent implements OnInit {
     const token = this.jwtService.getToken();
     if (token) {
       this.http
-        .get('/find-user')
+        .get(environment.Server_URL + 'find-user')
         .pipe(
           map((res) => {
             return res as any;
