@@ -28,6 +28,7 @@ body {
   border-radius: 0.25em;
   border: 0.15em solid var(--app-theme);
   cursor: pointer;
+  padding: 0.5em 1em 0.5em 1em;
 }
 .app-btn:hover {
   color: var(--app-theme);

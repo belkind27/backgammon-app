@@ -5,3 +5,8 @@ nav {
   background-color: var(--app-theme-light);
   border-bottom: var(--app-border) solid var(--app-theme);
 }
+h4{
+  padding-left: 2rem;
+  margin-bottom: 0px;
+  color: var(--app-theme-dark);
+}

@@ -18,7 +18,7 @@ export class SetHeadersInterceptor implements HttpInterceptor {
     const authReq = req.clone({
       headers: req.headers.set(
         'Authorization',
-        this.jwtService.getToken() as string
+        ('bearer ' + this.jwtService.getToken()) as string
       ),
     });
     return next.handle(authReq);
