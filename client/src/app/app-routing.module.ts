@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/guards';
+import { AuthGuard } from './core/guards/auth.guard';
 import { GetJwtService } from './core/services/get-jwt.service';
 import { FindFriendsMainComponent } from './modules/find-friends-page/components/find-friends-main/find-friends-main.component';
 import { GameMainComponent } from './modules/game-page/components/game-main/game-main.component';
