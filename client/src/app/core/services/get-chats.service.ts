@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,13 +13,15 @@ export class GetChatsService {
   chats$: Subject<Dialog> = new Subject();
   getChat(id: string): void {
     this.http
-      .get(environment.Server_URL + 'dialog')
+      .get(environment.Server_URL + 'dialog', {
+        params: new HttpParams().set('id', id),
+      })
       .pipe(map((res) => res as Dialog))
       .subscribe((res) => {
         this.chats$.next(res);
       });
   }
-  sendMessage(id: string, massage: any): void {
-    this.http.post('', massage).subscribe();
+  sendMessage(id: string, message: any): void {
+    this.http.post('new-message', { dialogId: id, msg: message }).subscribe();
   }
 }

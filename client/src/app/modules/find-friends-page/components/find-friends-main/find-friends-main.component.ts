@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FriendsListService } from 'src/app/core/services/friends-list.service';
-import { GetFriendsService } from '../../services/get-friends.service';
 
 @Component({
   selector: 'app-find-friends-main',
   templateUrl: './find-friends-main.component.html',
   styleUrls: ['./find-friends-main.component.css'],
-  providers: [GetFriendsService],
 })
 export class FindFriendsMainComponent implements OnInit {
   constructor(private friendsService: FriendsListService) {}

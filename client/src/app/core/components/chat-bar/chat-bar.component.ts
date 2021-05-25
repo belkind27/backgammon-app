@@ -37,7 +37,7 @@ export class ChatBarComponent implements OnInit {
     const message = {
       content: msgContent,
       senderId: chat.myId,
-      date: Date.now,
+      time: new Date(),
     };
     this.getChats.sendMessage(chat.id, message);
     this.socketService.sendMessage(message, chat.friendId, chat.id);
