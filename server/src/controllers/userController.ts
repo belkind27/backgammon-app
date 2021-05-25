@@ -40,7 +40,7 @@ userController.get("/find-friends", authMiddleware, async (req, res) => {
     const id11: string = tmp.userId;
     user1 = await findUser(id11);
     user1?.friendsIdList.forEach(async (friendelementid) => {
-      let friend: IUser | null = await findUserUsingId(friendelementid);
+      let friend: IUser | null = await findUser(friendelementid);
       if (friend) friends?.push(friend);
     }); // if friend exist then push it into arrey
   } else console.log("token undefined");
@@ -150,11 +150,12 @@ export const makeFriend = async (
 };
 export const deleteFriend = async (id: string, friendId: string) => {
   const userman: IUser | null = await findUser(id)!;
-  const friendid2: Schema.Types.ObjectId = mongoose.Types.ObjectId(friendId);
+  const friendid2 = mongoose.Types.ObjectId(friendId);
+  const friendUser: IUser | null = await findUser(friendid2);
   if (userman) {
     for (let index = 0; index < userman.friendsIdList.length; index++) {
       const element = userman.friendsIdList[index];
-      if(element. === friendid2){
+      if(element === friendid2){
         userman.friendsIdList.splice(index,1)
       }
     }
@@ -162,6 +163,8 @@ export const deleteFriend = async (id: string, friendId: string) => {
       (idelement) => idelement !== friendid2
     ); */
     userman.save();
+    friendUser?.friendsIdList.filter((idelement) => idelement !== userman._id);
+    friendUser?.save();
   }
 };
 //#endregion
