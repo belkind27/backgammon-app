@@ -14,8 +14,8 @@ const UserSchema: Schema = new Schema({
   name: String,
   password: String,
   friendsIdList: [Schema.Types.ObjectId],
-  wins: 0,
-  loses: 0,
+  wins: Number,
+  loses: Number,
 });
 
 export const User: Model<IUser> = model("User", UserSchema);
