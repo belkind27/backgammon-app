@@ -1,7 +1,8 @@
-
-  export class Dialog {
-    id!: string
-    FirstId!:  String
-    secondId! :   String
-    messages! : [{ content : String, time: Date , senderId : string }]
-  }
+export class Dialog {
+  id!: string;
+  friendName!: string;
+  myId!: string;
+  friendId!: string;
+  show!: boolean;
+  messages!: [{ content: string; time: Date; senderId: string }];
+}

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FriendsListService } from 'src/app/core/services/friends-list.service';
 import { GetFriendsService } from '../../services/get-friends.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { GetFriendsService } from '../../services/get-friends.service';
   providers: [GetFriendsService],
 })
 export class FindFriendsMainComponent implements OnInit {
-  constructor(private friendsService: GetFriendsService) {}
+  constructor(private friendsService: FriendsListService) {}
   private innerNames!: Friend[];
   filteredNames!: Friend[];
   ngOnInit(): void {
@@ -28,8 +29,9 @@ export class FindFriendsMainComponent implements OnInit {
     input.value = '';
     this.filteredNames = [];
     alert(`${friend.name} Added To Friends`);
-    this.friendsService.addFriend(friend.id).subscribe((_) => {
+    this.friendsService.addFriends(friend.id).subscribe((_) => {
       this.getFriendsList();
+      this.friendsService.getFriends();
     });
   }
   private _filter(value: string, data: Friend[]): Friend[] {

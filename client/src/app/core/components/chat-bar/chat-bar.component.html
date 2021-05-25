@@ -1,9 +1,9 @@
-<div class="container-fluid" id="chat-bar" *ngIf="isShow">
+<div class="container-fluid" id="chat-bar">
   <div class="position-relative d-flex flex-row">
     <div *ngFor="let chat of chats">
       <div class="d-flex flex-row mx-2">
         <div class="app-link px-5" (click)="chat.show = !chat.show">
-          {{ chat.friend.name }}
+          {{ chat.friendName }}
         </div>
         <i
           class="far fa-times-circle app-link mx-2 align-self-center"
@@ -12,7 +12,7 @@
       </div>
       <div class="chat-window d-flex flex-column" *ngIf="chat.show">
         <div class="d-flex justify-content-between chat-title">
-          <span class="align-self-center">{{ chat.friend.name }}</span>
+          <span class="align-self-center">{{ chat.friendName }}</span>
           <div>
             <i
               class="fas fa-window-minimize app-link mx-3"
@@ -29,15 +29,15 @@
             *ngFor="let message of chat.messages"
             class="d-flex"
             [ngClass]="{
-              'justify-content-end': message.senderId !== chat.friend.id,
-              'justify-content-start': message.senderId === chat.friend.id
+              'justify-content-end': message.senderId !== chat.friendId,
+              'justify-content-start': message.senderId === chat.friendId
             }"
           >
             <div
               class="chat-message p-2"
               [ngClass]="{
-                self: message.senderId !== chat.friend.id,
-                friend: message.senderId === chat.friend.id
+                self: message.senderId !== chat.friendId,
+                friend: message.senderId === chat.friendId
               }"
             >
               {{ message.content }}
@@ -51,7 +51,12 @@
             #text
             placeholder="Write New Message"
           />
-          <button class="app-btn">Send</button>
+          <button
+            class="app-btn"
+            (click)="sendMessage(chat,text.value,text)"
+          >
+            Send
+          </button>
         </div>
       </div>
     </div>

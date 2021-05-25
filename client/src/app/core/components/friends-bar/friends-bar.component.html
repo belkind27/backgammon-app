@@ -2,7 +2,6 @@
   [@openCloseMenu]="isShown ? 'open' : 'closed'"
   id="friends-container"
   class="rounded shadow-lg"
-  *ngIf="isShow"
 >
   <div
     *ngFor="let friend of friends"
@@ -26,7 +25,7 @@
     </mat-menu>
   </div>
 </div>
-<div [@openCloseBtn]="isShown ? 'open' : 'closed'" id="btn" *ngIf="isShow">
+<div [@openCloseBtn]="isShown ? 'open' : 'closed'" id="btn">
   <a class="rounded p-3 shadow-lg" (click)="btnClick()" id="btn-link">
     <i class="fas fa-users fa-2x align-middle"></i>
   </a>
