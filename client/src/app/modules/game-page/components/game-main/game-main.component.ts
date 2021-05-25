@@ -1,17 +1,19 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Color, Dices, Player } from '../../models';
 import { GameHandlerService } from '../../services/game-handler.service';
+import { GameResultService } from '../../services/game-result.service';
 
 @Component({
   selector: 'app-game-main',
   templateUrl: './game-main.component.html',
   styleUrls: ['./game-main.component.css'],
-  providers: [GameHandlerService],
+  providers: [GameHandlerService, GameResultService],
 })
 export class GameMainComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
-    private gameService: GameHandlerService
+    private gameService: GameHandlerService,
+    private gameRes: GameResultService
   ) {}
   gameBoardLogic!: Player[][];
   gameBoardView!: Player[][];
@@ -42,6 +44,7 @@ export class GameMainComponent implements OnInit {
       this.isMyTurn = true;
       if (res.gameBoard.length === 0) {
         alert('You Lost');
+        this.gameRes.gameLost();
         this.gameService.gameEnded();
       }
       this.gameBoardLogic = res.gameBoard;
@@ -368,6 +371,7 @@ export class GameMainComponent implements OnInit {
   isPlayerWon(): void {
     if (this.numOfPlayersRemove === 15) {
       alert('You Won!!!');
+      this.gameRes.gameWon();
       this.gameService.nextTurn([], []);
       this.gameService.gameEnded();
     }
