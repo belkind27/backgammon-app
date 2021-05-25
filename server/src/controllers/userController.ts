@@ -13,28 +13,19 @@ userController.use(express.json());
 userController.get("/find-all-users", async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const id11 = jwt.decode(token);
-  const users: Array<IUser> = await User.find();
-  let mainuser: IUser = new User();
-  User.findOne({ _id: id11 }).exec(
-    (err: CallbackError, user22: IUser | null) => {
-      if (user22 !== null) {
-        mainuser = user22;
-      } else {
-        console.log("could not find user");
-      }
-    }
-  );
-  let tempusers = users.filter(
-    (userelement) => userelement._id !== mainuser._id
-  );
-  if (mainuser.name)
-    // user is not null
-    mainuser.friendsIdList.forEach((friendelement) => {
-      tempusers = tempusers.filter(
-        (userelement) => userelement._id !== friendelement
-      );
-    });
-  res.status(202).send(tempusers);
+  let users: Array<IUser> = await User.find();
+  let mainuser: IUser | null = await User.findOne({ _id: id11 }).exec();
+  if (mainuser) {
+    users = users.filter((userelement) => userelement._id !== mainuser?._id);
+    if (mainuser.name)
+      // user is not null
+      mainuser.friendsIdList.forEach((friendelement) => {
+        users = users.filter(
+          (userelement) => userelement._id !== friendelement
+        );
+      });
+  }
+  res.status(202).send(users);
 });
 
 userController.get("/find-friends", async (req, res) => {
