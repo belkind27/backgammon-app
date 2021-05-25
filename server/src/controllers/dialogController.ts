@@ -23,7 +23,7 @@ dialogController.get("/dialog", authMiddleware, async (req, res) => {
   const friend1: IUser = findUser(id2)!;
   const friendname1 = friend1.name;
   const clientDialog = {
-    id: dialog?.id,
+    id: dialog?._id,
     friendName: friendname1,
     myId: id1,
     friendId: id2,
@@ -31,7 +31,7 @@ dialogController.get("/dialog", authMiddleware, async (req, res) => {
     messages: dialog?.messages,
   };
 
-  res.status(202).send();
+  res.status(202).send(clientDialog);
 });
 
 dialogController.post("/new-message", authMiddleware, async (req, res) => {
