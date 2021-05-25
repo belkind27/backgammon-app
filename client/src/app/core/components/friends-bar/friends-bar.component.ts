@@ -6,7 +6,9 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
-import { GetJwtService } from '../../services/get-jwt.service';
+import { FriendsListService } from '../../services/friends-list.service';
+import { GetChatsService } from '../../services/get-chats.service';
+import { SocketHandlerService } from '../../services/socket-handler.service';
 
 @Component({
   selector: 'app-friends-bar',
@@ -49,39 +51,64 @@ import { GetJwtService } from '../../services/get-jwt.service';
 })
 export class FriendsBarComponent implements OnInit {
   isShown!: boolean;
-  isShow = false;
-  friends = [
-    { name: 'friend 1', isConnected: true },
-    { name: 'friend 2', isConnected: true },
-    { name: 'friend 3', isConnected: false },
-    { name: 'friend 4', isConnected: false },
-    { name: 'friend 5', isConnected: true },
-    { name: 'friend 6', isConnected: false },
-    { name: 'friend 7', isConnected: true },
-    { name: 'friend 8', isConnected: false },
-    { name: 'friend 9', isConnected: true },
-    { name: 'friend 10', isConnected: false },
-    { name: 'friend 11', isConnected: true },
-    { name: 'friend 12', isConnected: false },
-    { name: 'friend 13', isConnected: true },
-    { name: 'friend 14', isConnected: false },
-    { name: 'friend 15', isConnected: true },
-    { name: 'friend 16', isConnected: false },
-    { name: 'friend 17', isConnected: true },
-  ];
-  constructor(private jwtService: GetJwtService) {}
+  friends: FriendsInList[] = [];
+  connectedUsers!: string[];
+  constructor(
+    private getChats: GetChatsService,
+    private socketService: SocketHandlerService,
+    private friendsService: FriendsListService
+  ) {}
 
   ngOnInit(): void {
-    const token = this.jwtService.getToken();
-    if (token) {
-      this.isShow = true;
-    }
-    this.isShow = false;
+    this.socketService.onInvite().subscribe((res) => {
+      const name = this.friends.find((f) => f.id === res)?.name;
+      const ans = confirm(`${name} Wants To Play`);
+      if (ans) {
+        this.socketService.acceptInvite(res);
+      }
+    });
+    this.friendsService.friendsList$.subscribe((res) => {
+      this.friends = res;
+      this.friends.forEach((friend) => {
+        let connected = false;
+        this.connectedUsers?.forEach((id) => {
+          if (id === friend.id) {
+            connected = true;
+          }
+        });
+        friend.isConnected = connected;
+      });
+    });
+    this.friendsService.getFriends();
+    this.socketService.getConnectedUsersIds().subscribe((res) => {
+      this.connectedUsers = res;
+      this.friends.forEach((friend) => {
+        let connected = false;
+        res.forEach((id) => {
+          if (id === friend.id) {
+            connected = true;
+          }
+        });
+        friend.isConnected = connected;
+      });
+    });
   }
   btnClick(): void {
     this.isShown ? (this.isShown = false) : (this.isShown = true);
   }
-  unfriend(friend: any): void {}
-  playWithFriend(friend: any): void {}
-  openChat(friend: any): void {}
+  unfriend(friend: FriendsInList): void {
+    this.friendsService.removeFriends(friend.id);
+  }
+  playWithFriend(friend: FriendsInList): void {
+    this.socketService.playWithFriend(friend.id);
+  }
+  openChat(friend: FriendsInList): void {
+    this.getChats.getChat(friend.id);
+    this.socketService.openChat(friend.id);
+  }
+}
+export interface FriendsInList {
+  id: string;
+  name: string;
+  isConnected: boolean;
 }

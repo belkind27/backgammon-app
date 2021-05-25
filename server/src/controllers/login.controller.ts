@@ -41,7 +41,10 @@ loginController.post("/Login", (req, res) => {
 
   const userId = usersample.id;
 
-  const token = jwt.sign({ id: userId }, JWT_KEY, { expiresIn: "1D" });
+
+
+  const token = jwt.sign(userId, JWT_KEY, { expiresIn: "1D" });
+
   res.status(200).json({ token: token });
 });
 

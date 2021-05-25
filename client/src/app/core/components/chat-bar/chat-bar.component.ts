@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { GetJwtService } from '../../services/get-jwt.service';
+import { Dialog } from 'src/app/models/dialog.model';
+import { GetChatsService } from '../../services/get-chats.service';
+import { SocketHandlerService } from '../../services/socket-handler.service';
 
 @Component({
   selector: 'app-chat-bar',
@@ -7,58 +9,38 @@ import { GetJwtService } from '../../services/get-jwt.service';
   styleUrls: ['./chat-bar.component.css'],
 })
 export class ChatBarComponent implements OnInit {
-  isShow = false;
-  chats = [
-    {
-      show: false,
-      friend: { name: 'friend 1', id: 1 },
-      messages: [
-        { senderId: 1, content: 'hello world' },
-        { senderId: 1, content: 'hello world' },
-        { senderId: 2, content: 'hello world' },
-        { senderId: 1, content: 'hello world' },
-        { senderId: 2, content: 'hello world sssssssss' },
-        { senderId: 1, content: 'hello worlddddd dsdsf rergsh' },
-        { senderId: 2, content: 'hello world' },
-        { senderId: 2, content: 'hello world sdgaersgearg segwsezgderggfffs' },
-        { senderId: 1, content: 'hello world' },
-        { senderId: 1, content: 'hello world' },
-        { senderId: 2, content: 'hello world' },
-        { senderId: 1, content: 'hello world' },
-        { senderId: 2, content: 'hello world sssssssss' },
-        { senderId: 1, content: 'hello worlddddd dsdsf rergsh' },
-        { senderId: 2, content: 'hello world' },
-        { senderId: 2, content: 'hello world sdgaersgearg segwsezgderggfffs' },
-      ],
-    },
-    {
-      show: false,
-      friend: { name: 'friend 2', id: 2 },
-      messages: [
-        { senderId: 1, content: 'hello world' },
-        { senderId: 1, content: 'hello world' },
-        { senderId: 2, content: 'hello world' },
-        { senderId: 1, content: 'hello world' },
-        { senderId: 2, content: 'hello world sssssssss' },
-        { senderId: 1, content: 'hello worlddddd dsdsf rergsh' },
-        { senderId: 2, content: 'hello world' },
-        { senderId: 2, content: 'hello world sdgaersgearg segwsezgderggfffs' },
-      ],
-    },
-  ];
-  constructor(private jwtService: GetJwtService) {}
+  chats: Dialog[] = [];
+  constructor(
+    private getChats: GetChatsService,
+    private socketService: SocketHandlerService
+  ) {}
 
   ngOnInit(): void {
-    const token = this.jwtService.getToken();
-    if (token) {
-      this.isShow = true;
-    }
-    this.isShow = false;
-  }
-  deleteChat(chatToDelete: any): void {
-    const deleteId = chatToDelete.friend.id as number;
-    this.chats = this.chats.filter((chat) => {
-      return chat.friend.id !== deleteId;
+    this.getChats.chats$.subscribe((res) => {
+      this.chats.push(res);
     });
+    this.socketService.receiveMessage().subscribe((res) => {
+      const chat = this.chats.find((c) => c.id === res.id);
+      chat?.messages.push(res.msg);
+    });
+    this.socketService.onChatOpened().subscribe((res) => {
+      sessionStorage.setItem(res.id, res.chat);
+      this.getChats.getChat(res.id);
+    });
+  }
+  deleteChat(chatToDelete: Dialog): void {
+    this.chats = this.chats.filter((chat) => {
+      return chat.id !== chatToDelete.id;
+    });
+  }
+  sendMessage(chat: Dialog, msgContent: string, input: any): void {
+    const message = {
+      content: msgContent,
+      senderId: chat.myId,
+      date: Date.now,
+    };
+    this.getChats.sendMessage(chat.id, message);
+    this.socketService.sendMessage(message, chat.friendId, chat.id);
+    input.value = '';
   }
 }
