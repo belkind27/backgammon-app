@@ -108,8 +108,8 @@ userController.delete("/delete-friend", authMiddleware, async (req, res) => {
 
 //#region functions
 export const findUser = async (id12: string): Promise<IUser | null> => {
-  const idobject = mongoose.Types.ObjectId(id12);
-  return User.findById(idobject).exec();
+  const dd = mongoose.Types.ObjectId(id12);
+  return User.findById(dd).exec();
 };
 
 export const findUserUsingId = async (
