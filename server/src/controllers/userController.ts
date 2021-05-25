@@ -13,7 +13,6 @@ userController.use(express.json());
 userController.get("/find-all-users", async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const id11 = jwt.decode(token);
-
   const users: Array<IUser> = await User.find();
   let mainuser: IUser = new User();
   User.findOne({ _id: id11 }).exec(
@@ -25,7 +24,6 @@ userController.get("/find-all-users", async (req, res) => {
       }
     }
   );
-
   let tempusers = users.filter((userelement) => userelement.id !== mainuser.id);
   if (mainuser.name)
     // user is not null
@@ -35,14 +33,6 @@ userController.get("/find-all-users", async (req, res) => {
       );
     });
   res.status(202).send(tempusers);
-});
-
-userController.get("/find-all-user", async (req, res) => {
-  const token: string = req.headers.authorization?.split(" ")[1]!;
-  if (token !== undefined) {
-    const id11: string = jwt.decode(token) as string;
-    res.send(findUser(id11));
-  } else console.log("token undefined");
 });
 
 userController.get("/find-friends", async (req, res) => {
@@ -60,24 +50,56 @@ userController.get("/find-friends", async (req, res) => {
   res.send(friends);
 });
 
-userController.get("/add-friend", async (req, res) => {
+userController.get("/find-user", async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
-  const friendid = req.body.friendid;
+  let user1: IUser | null = new User();
+  if (token !== undefined) {
+    const id11: string = jwt.decode(token) as string;
+    user1 = findUser(id11);
+  } else console.log("token undefined");
+  res.status(202).send(user1);
+});
+
+userController.post("/add-friend", async (req, res) => {
+  const token: string = req.headers.authorization?.split(" ")[1]!;
+  const friendid = req.body.userid;
   if (token !== undefined) {
     const id11: string = jwt.decode(token) as string;
     makeFriend(id11, friendid);
     console.log("you have a friend");
   } else console.log("token undefined");
+  res.status(202).send();
+});
+
+userController.post("/game-result", async (req, res) => {
+  const token: string = req.headers.authorization?.split(" ")[1]!;
+  const isGameWon: boolean = req.body.isGameWon;
+  let user: IUser;
+  if (token !== undefined) {
+    const id11: string = jwt.decode(token) as string;
+    user = findUser(id11)!;
+    if (isGameWon) {
+      user.wins += 1;
+      console.log("game won");
+    } else {
+      user.loses += 1;
+      console.log("game lost");
+    }
+    user.save();
+  } else console.log("token undefined");
+  res.status(202).send();
 });
 
 userController.delete("/delete-friend", async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
-  const friendid = req.body.friendid;
+  const friendid = req.params.id;
+  //probably not much of a friend
   if (token !== undefined) {
     const id11: string = jwt.decode(token) as string;
     deleteFriend(id11, friendid);
     console.log("you have lost a friend");
   } else console.log("token undefined");
+  res.status(202).send();
 });
 
 //#region functions
@@ -123,10 +145,12 @@ export const findUserbydetails = (
   else return null;
 };
 
+// the function also returns the number of friends U have, to remind U that you're lonely :)
 export const makeFriend = (id: string, friendId: string): number => {
   const userman: IUser = findUser(id)!;
   const friendid2 = mongoose.Types.ObjectId(friendId);
   const friendnum: number = userman.friendsIdList.push(friendid2);
+  userman.save();
   return friendnum;
 };
 export const deleteFriend = (id: string, friendId: string) => {
@@ -135,6 +159,7 @@ export const deleteFriend = (id: string, friendId: string) => {
   userman.friendsIdList = userman.friendsIdList.filter(
     (idelement) => idelement !== friendid2
   );
+  userman.save();
 };
 //#endregion
 
