@@ -132,10 +132,13 @@ export const makeFriend = async (
 ): Promise<number> => {
   const userman: IUser | null = await findUser(id)!;
   const friendid2 = mongoose.Types.ObjectId(friendId);
+  const friendUser: IUser | null = await findUser(friendid2);
   let friendnum: number = 0;
   if (userman) {
     friendnum = userman.friendsIdList.push(friendid2);
     userman.save();
+    friendUser?.friendsIdList.push(userman._id);
+    friendUser?.save();
   }
   return friendnum;
 };
