@@ -39,16 +39,17 @@ userController.get("/find-all-users", async (req, res) => {
 
 userController.get("/find-friends", async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
-  let user1: IUser | null = new User();
+  let user1: IUser | null;
   let friends: Array<IUser> | null = null;
   if (token !== undefined) {
     const id11: string = jwt.decode(token) as string;
-    user1 = findUser(id11);
+    user1 = await findUser(id11);
+    user1?.friendsIdList.forEach(async (friendelementid) => {
+      let friend: IUser | null = await findUserUsingId(friendelementid);
+      if (friend) friends?.push(friend);
+    }); // if friend exist then push it into arrey
   } else console.log("token undefined");
-  user1?.friendsIdList.forEach((friendelementid) => {
-    let friend: IUser | null = findUserUsingId(friendelementid);
-    if (friend) friends?.push(friend); // if friend exist then push it io arrey
-  });
+
   res.send(friends);
 });
 
@@ -57,7 +58,7 @@ userController.get("/find-user", async (req, res) => {
   let user1: IUser | null = new User();
   if (token !== undefined) {
     const id11: string = jwt.decode(token) as string;
-    user1 = findUser(id11);
+    user1 = await findUser(id11);
   } else console.log("token undefined");
   res.status(202).send(user1);
 });
@@ -76,18 +77,20 @@ userController.post("/add-friend", async (req, res) => {
 userController.post("/game-result", async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const isGameWon: boolean = req.body.isGameWon;
-  let user: IUser;
+  let user: IUser | null;
   if (token !== undefined) {
     const id11: string = jwt.decode(token) as string;
-    user = findUser(id11)!;
-    if (isGameWon) {
-      user.wins += 1;
-      console.log("game won");
-    } else {
-      user.loses += 1;
-      console.log("game lost");
+    user = await findUser(id11)!;
+    if (user) {
+      if (isGameWon) {
+        user.wins += 1;
+        console.log("game won");
+      } else {
+        user.loses += 1;
+        console.log("game lost");
+      }
+      user.save();
     }
-    user.save();
   } else console.log("token undefined");
   res.status(202).send();
 });
@@ -105,28 +108,15 @@ userController.delete("/delete-friend", async (req, res) => {
 });
 
 //#region functions
-export const findUser = (id12: string): IUser | null => {
-  let user1: IUser = new User();
+export const findUser = async (id12: string): Promise<IUser | null> => {
   const idobject = mongoose.Types.ObjectId(id12);
-  User.findById(idobject).exec((err: CallbackError, user22: IUser | null) => {
-    if (user22 !== null) {
-      user1 = user22;
-    } else console.log("could not find user" + err?.message);
-  });
-  return user1;
+  return User.findById(idobject).exec();
 };
 
-export const findUserUsingId = (id12: Schema.Types.ObjectId): IUser | null => {
-  let user1: IUser | null = new User();
-  User.findById(id12).exec((err: CallbackError, user22: IUser | null) => {
-    if (user22 !== null) {
-      user1 = user22;
-    } else {
-      console.log("could not find user" + err?.message);
-      user1 = null;
-    }
-  });
-  return user1;
+export const findUserUsingId = async (
+  id12: Schema.Types.ObjectId
+): Promise<IUser | null> => {
+  return User.findById(id12).exec();
 };
 
 export const findUserbydetails = async (
@@ -137,20 +127,28 @@ export const findUserbydetails = async (
 };
 
 // the function also returns the number of friends U have, to remind U that you're lonely :)
-export const makeFriend = (id: string, friendId: string): number => {
-  const userman: IUser = findUser(id)!;
+export const makeFriend = async (
+  id: string,
+  friendId: string
+): Promise<number> => {
+  const userman: IUser | null = await findUser(id)!;
   const friendid2 = mongoose.Types.ObjectId(friendId);
-  const friendnum: number = userman.friendsIdList.push(friendid2);
-  userman.save();
+  let friendnum: number = 0;
+  if (userman) {
+    friendnum = userman.friendsIdList.push(friendid2);
+    userman.save();
+  }
   return friendnum;
 };
-export const deleteFriend = (id: string, friendId: string) => {
-  const userman: IUser = findUser(id)!;
+export const deleteFriend = async (id: string, friendId: string) => {
+  const userman: IUser | null = await findUser(id)!;
   const friendid2 = mongoose.Types.ObjectId(friendId);
-  userman.friendsIdList = userman.friendsIdList.filter(
-    (idelement) => idelement !== friendid2
-  );
-  userman.save();
+  if (userman) {
+    userman.friendsIdList = userman.friendsIdList.filter(
+      (idelement) => idelement !== friendid2
+    );
+    userman.save();
+  }
 };
 //#endregion
 

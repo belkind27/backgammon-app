@@ -20,16 +20,19 @@ dialogController.get("/dialog", authMiddleware, async (req, res) => {
   if (!dialog) {
     dialog = createDialog(id1, id2);
   }
-  const friend1: IUser = findUser(id2)!;
-  const friendname1 = friend1.name;
-  const clientDialog = {
-    id: dialog?._id,
-    friendName: friendname1,
-    myId: id1,
-    friendId: id2,
-    show: false,
-    messages: dialog?.messages,
-  };
+  const friend1: IUser | null = await findUser(id2)!;
+  let clientDialog;
+  if (friend1) {
+    const friendname1 = friend1.name;
+    clientDialog = {
+      id: dialog?._id,
+      friendName: friendname1,
+      myId: id1,
+      friendId: id2,
+      show: false,
+      messages: dialog?.messages,
+    };
+  }
 
   res.status(202).send(clientDialog);
 });
@@ -63,34 +66,24 @@ export const findDialogUsingId = (
   return dialog1;
 };
 
-export const findDialog = (
+export const findDialog = async (
   iduser1: string,
   iduser2: string
-): IDialog | null => {
-  let dialog1: IDialog | null = new Dialog();
-  Dialog.findOne({ firstId: iduser1, secondId: iduser2 }).exec(
-    (err: CallbackError, dialogfromdb: IDialog | null) => {
-      if (dialogfromdb !== null) {
-        dialog1 = dialogfromdb;
-      } else {
-        console.log("could not find dialog first try");
-      }
-    }
-  );
-  if (dialog1.firstId) {
+): Promise<IDialog | null> => {
+  let dialog1: IDialog | null = await Dialog.findOne({
+    firstId: iduser1,
+    secondId: iduser2,
+  }).exec();
+  if (dialog1) {
     // dialog1 exists in db
     return dialog1;
   } else {
-    Dialog.findOne({ firstId: iduser2, secondId: iduser1 }).exec(
-      (err: CallbackError, dialogfromdb: IDialog | null) => {
-        if (dialogfromdb !== null) {
-          dialog1 = dialogfromdb;
-        } else {
-          console.log("could not find dialog second try");
-          dialog1 = null;
-        }
-      }
-    );
+    console.log("didnt find log in first try");
+    dialog1 = await Dialog.findOne({
+      firstId: iduser2,
+      secondId: iduser1,
+    }).exec();
+    if (!dialog1) console.log("didnt find log in second try");
     return dialog1;
   }
 };
@@ -111,4 +104,4 @@ export const createDialog = (id1: string, id2: string): IDialog | null => {
   return dialognew;
 };
 //#endregion
-export {dialogController};
+export { dialogController };
