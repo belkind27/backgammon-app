@@ -111,3 +111,4 @@ export const createDialog = (id1: string, id2: string): IDialog | null => {
   return dialognew;
 };
 //#endregion
+export {dialogController};
