@@ -24,12 +24,14 @@ userController.get("/find-all-users", async (req, res) => {
       }
     }
   );
-  let tempusers = users.filter((userelement) => userelement.id !== mainuser.id);
+  let tempusers = users.filter(
+    (userelement) => userelement._id !== mainuser._id
+  );
   if (mainuser.name)
     // user is not null
     mainuser.friendsIdList.forEach((friendelement) => {
       tempusers = tempusers.filter(
-        (userelement) => userelement.id !== friendelement
+        (userelement) => userelement._id !== friendelement
       );
     });
   res.status(202).send(tempusers);

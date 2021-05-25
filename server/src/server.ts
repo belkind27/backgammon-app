@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import { initServerWithSocket } from "../src/libs/socket";
 import { loginController } from "./controllers/login.controller";
-import { userController } from "./controllers/userController"
-const mongoose =  require('mongoose');
-import { Dialog , IDialog } from "./libs/dbmodels/dialog";
+import { userController } from "./controllers/userController";
+const mongoose = require("mongoose");
+import { Dialog, IDialog } from "./libs/dbmodels/dialog";
 import { User, IUser } from "./libs/dbmodels/user";
 
 const app = express();
@@ -13,6 +13,7 @@ app.use(loginController);
 app.use(userController);
 const dbURI =
   "mongodb+srv://gameguy:gameguy100@cluster0.f6bsm.mongodb.net/BackgammonDB?retryWrites=true&w=majority";
+//mongodb+srv://<username>:<password>@cluster0.f6bsm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 mongoose
   .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
@@ -23,11 +24,3 @@ mongoose
   });
 initServerWithSocket(app);
 // jwt.decode(token)
-
-
-
-app.get("/find-all-users", async (req, res) => {
-  const users: Array<IUser> = await User.find();  
-  res.status(202).send(users);
-});
-
