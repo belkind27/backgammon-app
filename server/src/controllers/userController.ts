@@ -101,7 +101,7 @@ userController.post("/game-result", authMiddleware, async (req, res) => {
 
 userController.delete("/delete-friend", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
-  const friendid = req.params.id;
+  const friendid: string= req.query.id as string;
   //probably not much of a friend
   if (token !== undefined) {
     const tmp = jwt.decode(token) as { [key: string]: any };
@@ -150,18 +150,11 @@ export const makeFriend = async (
 };
 export const deleteFriend = async (id: string, friendId: string) => {
   const userman: IUser | null = await findUser(id)!;
-  const friendid2 = mongoose.Types.ObjectId(friendId);
-  const friendUser: IUser | null = await findUser(friendid2);
+  const friendUser: IUser | null = await findUser(friendId);
   if (userman) {
-    for (let index = 0; index < userman.friendsIdList.length; index++) {
-      const element = userman.friendsIdList[index];
-      if(element === friendid2){
-        userman.friendsIdList.splice(index,1)
-      }
-    }
-/*     userman.friendsIdList = userman.friendsIdList.filter(
-      (idelement) => idelement !== friendid2
-    ); */
+    userman.friendsIdList = userman.friendsIdList.filter(
+      (idelement) => idelement !== friendId
+    );
     userman.save();
     friendUser?.friendsIdList.filter((idelement) => idelement !== userman._id);
     friendUser?.save();
