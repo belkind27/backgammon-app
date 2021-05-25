@@ -40,7 +40,7 @@ userController.get("/find-friends", authMiddleware, async (req, res) => {
     const id11: string = tmp.userId;
     user1 = await findUser(id11);
     user1?.friendsIdList.forEach(async (friendelementid) => {
-      let friend: IUser | null = await findUserUsingId(friendelementid);
+      let friend: IUser | null = await findUser(friendelementid);
       if (friend) friends?.push(friend);
     }); // if friend exist then push it into arrey
   } else console.log("token undefined");
