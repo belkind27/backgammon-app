@@ -143,7 +143,7 @@ export const findUserbydetails = (
       }
     }
   );
-  if ((user1.name = name1)) return user1;
+  if (user1.name == name1) return user1;
   else return null;
 };
 

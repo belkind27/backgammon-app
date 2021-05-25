@@ -13,27 +13,25 @@ loginController.use(express.json());
 loginController.post("/Login", (req, res) => {
   const name1 = req.body.userName;
   const password1 = req.body.userPassword;
-
-  // creating a sample of the user
-  let userSample: IUser = new User({
-    name: name1,
-    password1: password1,
-  });
-  const userLogged = findUserbydetails(name1, password1);
+  let userLogged = findUserbydetails(name1, password1);
   if (userLogged) {
-    userSample = userLogged;
+    console.log("in db already", userLogged);
   } else {
-    userSample
+    userLogged = new User({
+      name: name1,
+      password: password1,
+    });
+    userLogged
       .save()
       .then((result) => {
-        console.log(result);
+        console.log("created new", result);
       })
       .catch((err) => {
         console.log(err);
       });
   }
-  const userId = userSample._id;
-  const token = jwt.sign({userId}, JWT_KEY, { expiresIn: "1D" });
+  const userId = userLogged._id;
+  const token = jwt.sign({ userId }, JWT_KEY, { expiresIn: "1D" });
   res.status(200).json({ token: token });
 });
 
