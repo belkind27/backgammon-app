@@ -145,11 +145,14 @@ export const makeFriend = async (
 export const deleteFriend = async (id: string, friendId: string) => {
   const userman: IUser | null = await findUser(id)!;
   const friendid2 = mongoose.Types.ObjectId(friendId);
+  const friendUser: IUser | null = await findUser(friendid2);
   if (userman) {
     userman.friendsIdList = userman.friendsIdList.filter(
       (idelement) => idelement !== friendid2
     );
     userman.save();
+    friendUser?.friendsIdList.filter((idelement) => idelement !== userman._id);
+    friendUser?.save();
   }
 };
 //#endregion
