@@ -10,10 +10,10 @@ const loginController = express.Router();
 
 loginController.use(express.json());
 
-loginController.post("/Login", (req, res) => {
+loginController.post("/Login", async (req, res) => {
   const name1 = req.body.userName;
   const password1 = req.body.userPassword;
-  let userLogged = findUserbydetails(name1, password1);
+  let userLogged = await findUserbydetails(name1, password1);
   if (userLogged) {
     console.log("in db already", userLogged);
   } else {

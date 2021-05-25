@@ -129,22 +129,11 @@ export const findUserUsingId = (id12: Schema.Types.ObjectId): IUser | null => {
   return user1;
 };
 
-export const findUserbydetails = (
+export const findUserbydetails = async (
   name1: string,
   password1: string
-): IUser | null => {
-  let user1: IUser = new User();
-  User.findOne({ name: name1, password: password1 }).exec(
-    (err: CallbackError, userfromdb: IUser | null) => {
-      if (userfromdb !== null) {
-        user1 = userfromdb;
-      } else {
-        console.log("could not find user");
-      }
-    }
-  );
-  if (user1.name == name1) return user1;
-  else return null;
+): Promise<IUser | null> => {
+  return User.findOne({ name: name1, password: password1 }).exec();
 };
 
 // the function also returns the number of friends U have, to remind U that you're lonely :)
