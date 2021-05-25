@@ -15,7 +15,7 @@ dialogController.use(express.json());
 dialogController.get("/dialog", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const tmp = jwt.decode(token) as { [key: string]: any };
-  const id1: string = tmp.UserId;
+  const id1: string = tmp.userId;
   const id2 = req.params.id2;
   let dialog: IDialog | null = await findDialog(id1, id2);
   if (!dialog) {

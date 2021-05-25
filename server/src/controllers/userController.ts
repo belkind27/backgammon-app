@@ -11,10 +11,10 @@ const userController = express.Router();
 userController.use(express.json());
 
 // finding all useres except the ones that are already our friends
-userController.get("/find-all-users", async (req, res) => {
+userController.get("/find-all-users", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const tmp = jwt.decode(token) as { [key: string]: any };
-  const id11 = tmp.UserId;
+  const id11 = tmp.userId;
 
   let users: Array<IUser> = await User.find();
   let mainuser: IUser | null = await User.findOne({ _id: id11 }).exec();
@@ -37,7 +37,7 @@ userController.get("/find-friends", authMiddleware, async (req, res) => {
   let friends: Array<IUser> | null = null;
   if (token !== undefined) {
     const tmp = jwt.decode(token) as { [key: string]: any };
-    const id11: string = tmp.UserId;
+    const id11: string = tmp.userId;
     user1 = await findUser(id11);
     user1?.friendsIdList.forEach(async (friendelementid) => {
       let friend: IUser | null = await findUserUsingId(friendelementid);
@@ -51,9 +51,9 @@ userController.get("/find-friends", authMiddleware, async (req, res) => {
 userController.get("/find-user", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   let user1: IUser | null = new User();
-  if (token !== undefined) {
+  if (token) {
     const tmp = jwt.decode(token) as { [key: string]: any };
-    const id11: string = tmp.UserId;
+    const id11: string = tmp.userId;
     user1 = await findUser(id11);
   } else console.log("token undefined");
   res.status(202).send(user1);
@@ -61,10 +61,10 @@ userController.get("/find-user", authMiddleware, async (req, res) => {
 
 userController.post("/add-friend", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
-  const friendid = req.body.userid;
+  const friendid = req.body.userId;
   if (token !== undefined) {
     const tmp = jwt.decode(token) as { [key: string]: any };
-    const id11: string = tmp.UserId;
+    const id11: string = tmp.userId;
     makeFriend(id11, friendid);
     console.log("you have a friend");
   } else console.log("token undefined");
@@ -77,7 +77,7 @@ userController.post("/game-result", authMiddleware, async (req, res) => {
   let user: IUser | null;
   if (token !== undefined) {
     const tmp = jwt.decode(token) as { [key: string]: any };
-    const id11: string = tmp.UserId;
+    const id11: string = tmp.userId;
     user = await findUser(id11)!;
     if (user) {
       if (isGameWon) {
@@ -99,7 +99,7 @@ userController.delete("/delete-friend", authMiddleware, async (req, res) => {
   //probably not much of a friend
   if (token !== undefined) {
     const tmp = jwt.decode(token) as { [key: string]: any };
-    const id11: string = tmp.UserId;
+    const id11: string = tmp.userId;
     deleteFriend(id11, friendid);
     console.log("you have lost a friend");
   } else console.log("token undefined");
