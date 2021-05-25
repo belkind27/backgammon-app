@@ -90,7 +90,7 @@ export const findDialog = async (
 };
 
 export const createDialog = (id1: string, id2: string): IDialog | null => {
-  const dialognew: IDialog | null = new Dialog();
+  let dialognew: IDialog | null = new Dialog();
   dialognew.firstId = id1;
   dialognew.secondId = id2;
   dialognew
