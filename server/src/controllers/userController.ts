@@ -75,15 +75,21 @@ userController.post("/game-result", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const isGameWon: boolean = req.body.isGameWon;
   let user: IUser | null;
-  if (token !== undefined) {
+  if (token) {
     const tmp = jwt.decode(token) as { [key: string]: any };
     const id11: string = tmp.userId;
     user = await findUser(id11)!;
     if (user) {
       if (isGameWon) {
+        if (!user.wins) {
+          user.wins = 0;
+        }
         user.wins += 1;
         console.log("game won");
       } else {
+        if (!user.loses) {
+          user.loses = 0;
+        }
         user.loses += 1;
         console.log("game lost");
       }
@@ -147,9 +153,15 @@ export const deleteFriend = async (id: string, friendId: string) => {
   const friendid2 = mongoose.Types.ObjectId(friendId);
   const friendUser: IUser | null = await findUser(friendid2);
   if (userman) {
-    userman.friendsIdList = userman.friendsIdList.filter(
+    for (let index = 0; index < userman.friendsIdList.length; index++) {
+      const element = userman.friendsIdList[index];
+      if(element === friendid2){
+        userman.friendsIdList.splice(index,1)
+      }
+    }
+/*     userman.friendsIdList = userman.friendsIdList.filter(
       (idelement) => idelement !== friendid2
-    );
+    ); */
     userman.save();
     friendUser?.friendsIdList.filter((idelement) => idelement !== userman._id);
     friendUser?.save();
