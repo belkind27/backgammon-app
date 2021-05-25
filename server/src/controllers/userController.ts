@@ -4,6 +4,7 @@ import { IUser, User } from "../libs/dbmodels/user";
 import jwt from "jsonwebtoken";
 import { JWT_KEY } from "../constants";
 import { CallbackError, Schema } from "mongoose";
+import { authMiddleware } from "../middlewares/auth.middleware";
 
 const userController = express.Router();
 
@@ -12,7 +13,9 @@ userController.use(express.json());
 // finding all useres except the ones that are already our friends
 userController.get("/find-all-users", async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
-  const id11 = jwt.decode(token);
+  const tmp = jwt.decode(token) as {[key: string]: any};
+  const id11 = tmp.UserId
+
   let users: Array<IUser> = await User.find();
   let mainuser: IUser | null = await User.findOne({ _id: id11 }).exec();
   if (mainuser) {
@@ -28,7 +31,7 @@ userController.get("/find-all-users", async (req, res) => {
   res.status(202).send(users);
 });
 
-userController.get("/find-friends", async (req, res) => {
+userController.get("/find-friends", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   let user1: IUser | null;
   let friends: Array<IUser> | null = null;
@@ -44,7 +47,7 @@ userController.get("/find-friends", async (req, res) => {
   res.send(friends);
 });
 
-userController.get("/find-user", async (req, res) => {
+userController.get("/find-user", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   let user1: IUser | null = new User();
   if (token !== undefined) {
@@ -54,7 +57,7 @@ userController.get("/find-user", async (req, res) => {
   res.status(202).send(user1);
 });
 
-userController.post("/add-friend", async (req, res) => {
+userController.post("/add-friend", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const friendid = req.body.userid;
   if (token !== undefined) {
@@ -65,7 +68,7 @@ userController.post("/add-friend", async (req, res) => {
   res.status(202).send();
 });
 
-userController.post("/game-result", async (req, res) => {
+userController.post("/game-result", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const isGameWon: boolean = req.body.isGameWon;
   let user: IUser | null;
@@ -86,7 +89,7 @@ userController.post("/game-result", async (req, res) => {
   res.status(202).send();
 });
 
-userController.delete("/delete-friend", async (req, res) => {
+userController.delete("/delete-friend", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const friendid = req.params.id;
   //probably not much of a friend
