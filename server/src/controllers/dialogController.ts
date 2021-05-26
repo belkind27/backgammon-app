@@ -42,27 +42,21 @@ dialogController.post("/new-message", authMiddleware, async (req, res) => {
   const dialogidstring = req.body.dialogid;
   const dialogid: Schema.Types.ObjectId =
     mongoose.Types.ObjectId(dialogidstring);
-  const dialog: IDialog = findDialogUsingId(dialogid)!;
+  const dialog: IDialog | null = await findDialogUsingId(dialogid)!;
   const message = req.body.msg;
-  dialog.messages.push(message);
+  dialog?.messages.push(message);
   res.status(202).send();
 });
 
 //#region functions
 
-export const findDialogUsingId = (
+export const findDialogUsingId = async (
   id1: Schema.Types.ObjectId
-): IDialog | null => {
-  let dialog1: IDialog | null = new Dialog();
-  Dialog.findOne({ id: id1 }).exec(
-    (err: CallbackError, dialogfromdb: IDialog | null) => {
-      if (dialogfromdb) {
-        dialog1 = dialogfromdb;
-      } else {
-        console.log("could not find dialog using id");
-      }
-    }
-  );
+): Promise<IDialog | null> => {
+  let dialog1: IDialog | null = await Dialog.findOne({ _id: id1 }).exec();
+  if (!dialog1) {
+    console.log("could not find dialog using id");
+  }
   // dialog1 exists in db
   return dialog1;
 };
