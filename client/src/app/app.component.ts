@@ -18,8 +18,9 @@ export class AppComponent implements OnInit {
         const token = this.jwtService.getToken();
         if (token) {
           this.isShow = true;
+        } else {
+          this.isShow = false;
         }
-        this.isShow = false;
       });
   }
 }

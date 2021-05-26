@@ -6,7 +6,7 @@ import { CallbackError } from "mongoose";
 import { Dialog, IDialog } from "../libs/dbmodels/dialog";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { findUser } from "../controllers/userController";
-import { IUser, User } from "../libs/dbmodels/user";
+import { IUser } from "../libs/dbmodels/user";
 
 const dialogController = express.Router();
 

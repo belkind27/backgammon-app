@@ -68,16 +68,18 @@ export class FriendsBarComponent implements OnInit {
       }
     });
     this.friendsService.friendsList$.subscribe((res) => {
-      this.friends = res;
-      this.friends.forEach((friend) => {
-        let connected = false;
-        this.connectedUsers?.forEach((id) => {
-          if (id === friend.id) {
-            connected = true;
-          }
+      if (res) {
+        this.friends = res;
+        this.friends.forEach((friend) => {
+          let connected = false;
+          this.connectedUsers?.forEach((id) => {
+            if (id === friend.id) {
+              connected = true;
+            }
+          });
+          friend.isConnected = connected;
         });
-        friend.isConnected = connected;
-      });
+      }
     });
     this.friendsService.getFriends();
     this.socketService.getConnectedUsersIds().subscribe((res) => {

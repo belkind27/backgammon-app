@@ -26,9 +26,17 @@ export class TopBarComponent implements OnInit {
           })
         )
         .subscribe((res) => {
-          this.userName = res.userName;
-          this.wins = res.wins;
-          this.loses = res.loses;
+          this.userName = res.name;
+          if (!res.wins) {
+            this.wins = 0;
+          } else {
+            this.wins = res.wins;
+          }
+          if (!res.loses) {
+            this.loses = 0;
+          } else {
+            this.loses = res.loses;
+          }
         });
     }
   }

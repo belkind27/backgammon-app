@@ -1,10 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { JWT_KEY } from "../constants";
-import { Mongoose, Schema } from "mongoose";
-const mongoose = require("mongoose");
-import { IUser, User } from "../libs/dbmodels/user";
-import { findUser, findUserbydetails } from "../controllers/userController";
+import { User } from "../libs/dbmodels/user";
+import { findUserbydetails } from "../controllers/userController";
 
 const loginController = express.Router();
 

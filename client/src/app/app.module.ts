@@ -11,6 +11,8 @@ import { LoginPageModule } from './modules/login-page/login-page.module';
 import { GamePageModule } from './modules/game-page/game-page.module';
 import { HomePageModule } from './modules/home-page/home-page.module';
 import { FindFriendsPageModule } from './modules/find-friends-page/find-friends-page.module';
+import { SetHeadersInterceptor } from './core/interceptors/auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 const socketioConfig: SocketIoConfig = {
   url: 'http://localhost:4000',
   options: {},
@@ -30,7 +32,13 @@ const socketioConfig: SocketIoConfig = {
     FindFriendsPageModule,
     SocketIoModule.forRoot(socketioConfig),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SetHeadersInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -18,7 +18,7 @@ export class FriendsListService {
       .pipe(map((res) => res as User[]))
       .subscribe((res) => {
         this.friendsList$.next(
-          res.map((friend) => {
+          res?.map((friend) => {
             return { id: friend.id, name: friend.name, isConnected: false };
           })
         );

@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 import express from "express";
 import { IUser, User } from "../libs/dbmodels/user";
 import jwt from "jsonwebtoken";
-import { JWT_KEY } from "../constants";
-import { CallbackError, Schema } from "mongoose";
+import { Schema } from "mongoose";
 import { authMiddleware } from "../middlewares/auth.middleware";
 
 const userController = express.Router();

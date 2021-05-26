@@ -4,11 +4,15 @@ import { JWT_KEY } from "../constants";
 const authMiddleware = (req: any, res: any, next: any) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    jwt.verify(token, JWT_KEY, {});
+    if (!token) {
+      res.sendStatus(401);
+    } else {
+      jwt.verify(token, JWT_KEY, {});
+      next();
+    }
   } catch (err) {
-    res.status(401);
+    return res.sendStatus(401);
   }
-  next();
 };
 
 export { authMiddleware };
