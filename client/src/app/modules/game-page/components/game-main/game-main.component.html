@@ -37,5 +37,14 @@
     (dragstart)="onDrag($event, jailIndex)"
   ></div>
 </div>
-<div id="end-button-container"> <button (click)="endTurn()" class="app-btn"> End Turn</button></div>
+<div id="manuel" class="text-center pt-2">
+  <h3>Game Instructions</h3>
+  <div class="m-3">In Order To Move click on Pawn You Wish To Move And Drag It To Suggested Slot</div>
+  <div>_________________________________</div>
+  <div class="m-3">When All Of Your Pawns Are in The Finale 6 Slots, You Can Remove The Correct Pawn By Double Clicking It </div>
+</div>
+
+<div id="end-button-container">
+  <button (click)="endTurn()" class="app-btn">End Turn</button>
+</div>
 <app-dice (resultsEmitter)="getDiceRes($event)" *ngIf="isMyTurn"></app-dice>

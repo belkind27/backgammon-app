@@ -164,30 +164,23 @@ export class GameMainComponent implements OnInit {
           this.diceRes.db1 = 0;
         } else {
           let sum;
+          let originLogicIndex = this.gameService.convertToLogicIndex(
+            originalIndex,
+            this.playerColor
+          );
+          if (this.isInJail) {
+            originLogicIndex = this.jailIndex;
+          }
           if (this.playerColor === Color.Black) {
             sum =
-              this.gameService.convertToLogicIndex(
-                originalIndex,
-                this.playerColor
-              ) -
+              originLogicIndex -
               this.gameService.convertToLogicIndex(slotIndex, this.playerColor);
           } else {
             sum =
               this.gameService.convertToLogicIndex(
                 slotIndex,
                 this.playerColor
-              ) -
-              this.gameService.convertToLogicIndex(
-                originalIndex,
-                this.playerColor
-              );
-          }
-          if (this.isInJail) {
-            if (this.playerColor === Color.Black) {
-              sum -= 1;
-            } else {
-              sum += 1;
-            }
+              ) - originLogicIndex;
           }
           sum === this.diceRes.dice1
             ? (this.diceRes.dice1 = 0)
@@ -202,11 +195,10 @@ export class GameMainComponent implements OnInit {
           this.colorRelevantSlots(this.jailIndex);
         } else {
           this.isInJail = false;
+          this.clearSuggestions();
         }
       } else {
-        this.colorRelevantSlots(
-          this.gameService.convertToLogicIndex(originalIndex, this.playerColor)
-        );
+        this.clearSuggestions();
       }
       this.isOppPlayerEaten(
         this.gameService.convertToLogicIndex(slotIndex, this.playerColor)
@@ -219,8 +211,10 @@ export class GameMainComponent implements OnInit {
     e.preventDefault();
   }
   endTurn(): void {
-    this.isMyTurn = false;
-    this.gameService.nextTurn(this.gameBoardLogic, this.jail);
+    if (!this.isThereAnyOptions()) {
+      this.isMyTurn = false;
+      this.gameService.nextTurn(this.gameBoardLogic, this.jail);
+    }
   }
   isOppPlayerEaten(logicIndex: number): void {
     // checks if the slot the player just moved to have 1 or more opp players
@@ -266,7 +260,7 @@ export class GameMainComponent implements OnInit {
   }
   removePlayer(viewIndex: number): void {
     // checks player in relevant phase
-    if (this.isInFinish) {
+    if (this.isInFinish && this.isInJail) {
       // checks if there is player in relevant slot
 
       const relevantSlot1 = this.gameService.getRelevantEndSlotIndex(
@@ -374,6 +368,43 @@ export class GameMainComponent implements OnInit {
       this.gameRes.gameWon();
       this.gameService.nextTurn([], []);
       this.gameService.gameEnded();
+    }
+  }
+  isThereAnyOptions(): boolean {
+    if (this.diceRes.dice1 === 0 && this.diceRes.dice2 === 0) {
+      return false;
+    } else {
+      for (let index = 0; index < this.gameBoardLogic.length; index++) {
+        const slot = this.gameBoardLogic[index];
+        if (slot.find((player) => player.color === this.playerColor)) {
+          const option1 = this.gameService.createSuggestion(
+            this.diceRes.dice1,
+            index,
+            this.playerColor,
+            this.gameBoardLogic
+          );
+          const option2 = this.gameService.createSuggestion(
+            this.diceRes.dice2,
+            index,
+            this.playerColor,
+            this.gameBoardLogic
+          );
+          if (option1 !== 100 || option2 !== 100) {
+            return true;
+          }
+        }
+      }
+      this.diceRes.dice1 = this.diceRes.dice1 = 0;
+      return false;
+    }
+  }
+  clearSuggestions(): void {
+    for (let i = 0; i < 24; i++) {
+      this.renderer.setAttribute(
+        document.getElementById(i.toString()),
+        'option',
+        'false'
+      );
     }
   }
 }
