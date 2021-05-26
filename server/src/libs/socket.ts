@@ -48,7 +48,11 @@ export const initServerWithSocket = (app: any) => {
         }
       }
       if (isNew) {
-        connectedUsers.push({ socketId: socket.id, userId: id });
+        connectedUsers.push({
+          socketId: socket.id,
+          userId: id,
+          socket: socket,
+        });
       }
       io.emit(
         Event.USER_CONNECTED,
@@ -106,8 +110,10 @@ export const initServerWithSocket = (app: any) => {
         (user) => user.userId === userToChatId
       );
       const you = connectedUsers.find((user) => user.socketId === socket.id);
-      if (userToChat&&you) {
+      if (userToChat && you) {
         const chatroom = uuidv4();
+        socket.join(chatroom);
+        userToChat.socket.join(chatroom);
         io.to(userToChat.socketId).emit(`chatRoom`, {
           chat: chatroom,
           id: you.userId,

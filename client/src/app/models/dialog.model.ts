@@ -1,5 +1,5 @@
 export class Dialog {
-  _id!: string;
+  id!: string;
   friendName!: string;
   myId!: string;
   friendId!: string;

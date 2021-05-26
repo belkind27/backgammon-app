@@ -19,7 +19,7 @@ dialogController.get("/dialog", authMiddleware, async (req, res) => {
   const id2 = req.query.id as string;
   let dialog: IDialog | null = await findDialog(id1, id2);
   if (!dialog) {
-    dialog = createDialog(id1, id2);
+    dialog = await createDialog(id1, id2);
   }
   const friend1: IUser | null = await findUser(id2)!;
   let clientDialog;
@@ -39,12 +39,13 @@ dialogController.get("/dialog", authMiddleware, async (req, res) => {
 });
 
 dialogController.post("/new-message", authMiddleware, async (req, res) => {
-  const dialogidstring = req.body.dialogid;
+  const dialogidstring = req.body.dialogId;
   const dialogid: Schema.Types.ObjectId =
     mongoose.Types.ObjectId(dialogidstring);
   const dialog: IDialog | null = await findDialogUsingId(dialogid)!;
   const message = req.body.msg;
   dialog?.messages.push(message);
+  await dialog?.save();
   res.status(202).send();
 });
 
@@ -83,20 +84,13 @@ export const findDialog = async (
   }
 };
 
-export const createDialog = (id1: string, id2: string): IDialog | null => {
+export const createDialog = async (id1: string, id2: string): Promise<IDialog | null> => {
   let dialognew: IDialog | null = new Dialog();
   dialognew.firstId = id1;
   dialognew.secondId = id2;
-  dialognew
+  return await dialognew
     .save()
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 
-  return dialognew;
 };
 //#endregion
 export { dialogController };

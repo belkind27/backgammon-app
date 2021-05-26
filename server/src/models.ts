@@ -1,3 +1,5 @@
+import { Socket } from "socket.io";
+
 export class Dialog {
   id!: string;
   friendName!: string;
@@ -20,6 +22,7 @@ export class User {
 export interface SocketUser {
   socketId: string;
   userId: string;
+  socket: Socket;
 }
 
 export enum Event {
