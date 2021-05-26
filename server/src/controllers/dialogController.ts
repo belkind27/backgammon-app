@@ -18,12 +18,12 @@ dialogController.get("/dialog", authMiddleware, async (req, res) => {
   const id1: string = tmp.userId;
   const id2 = req.query.id as string;
   let dialog: IDialog | null = await findDialog(id1, id2);
-  if (!dialog) {
-    dialog = await createDialog(id1, id2);
-  }
   const friend1: IUser | null = await findUser(id2)!;
 
-  Promise.all([dialog, friend1]).then((values) => {
+  Promise.all([dialog, friend1]).then(async (values) => {
+    if (!dialog) {
+      dialog = await createDialog(id1, id2);
+    }
     const friendname1 = friend1?.name;
     let clientDialog = {
       id: dialog?._id,
@@ -83,13 +83,14 @@ export const findDialog = async (
   }
 };
 
-export const createDialog = async (id1: string, id2: string): Promise<IDialog | null> => {
+export const createDialog = async (
+  id1: string,
+  id2: string
+): Promise<IDialog | null> => {
   let dialognew: IDialog | null = new Dialog();
   dialognew.firstId = id1;
   dialognew.secondId = id2;
-  return await dialognew
-    .save()
-
+  return await dialognew.save();
 };
 //#endregion
 export { dialogController };
