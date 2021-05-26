@@ -7,6 +7,7 @@ import { ChatBarComponent } from './components/chat-bar/chat-bar.component';
 import { HttpClientModule } from '@angular/common/http';
 import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -17,7 +18,13 @@ import { MatDialogModule } from '@angular/material/dialog';
     InviteDialogComponent,
   ],
   entryComponents: [InviteDialogComponent],
-  imports: [CommonModule, MatMenuModule, HttpClientModule, MatDialogModule],
+  imports: [
+    CommonModule,
+    MatMenuModule,
+    HttpClientModule,
+    MatDialogModule,
+    RouterModule,
+  ],
   exports: [TopBarComponent, FriendsBarComponent, ChatBarComponent],
 })
 export class CoreModule {}
