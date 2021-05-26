@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GetJwtService } from 'src/app/core/services/get-jwt.service';
+import { SocketHandlerService } from 'src/app/core/services/socket-handler.service';
 import { LoginService } from '../../services/login.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class LoginMainComponent implements OnInit {
   constructor(
     private loginService: LoginService,
     private tokenService: GetJwtService,
-    private router: Router
+    private router: Router,
+    private socketService: SocketHandlerService
   ) {}
   submit(): void {
     this.loginService
@@ -22,6 +24,7 @@ export class LoginMainComponent implements OnInit {
       .subscribe((res) => {
         if (res.token) {
           this.tokenService.setToken(res.token);
+          this.socketService.login(res.id)
           this.router.navigateByUrl('Home');
         } else {
           alert('Something went wrong please try later');

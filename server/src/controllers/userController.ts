@@ -22,11 +22,15 @@ userController.get("/find-all-users", authMiddleware, async (req, res) => {
     for (let index = 0; index < users.length; index++) {
       const element = users[index];
       if (mainUser._id.toString() !== element._id.toString()) {
-        mainUser.friendsIdList.forEach((friendId) => {
-          if (friendId !== element._id.toString()) {
-            idsOfNonFriends.push(element._id.toString());
-          }
-        });
+        if (mainUser.friendsIdList.length === 0) {
+          idsOfNonFriends.push(element._id.toString());
+        } else {
+          mainUser.friendsIdList.forEach((friendId) => {
+            if (friendId !== element._id.toString()) {
+              idsOfNonFriends.push(element._id.toString());
+            }
+          });
+        }
       }
     }
   }

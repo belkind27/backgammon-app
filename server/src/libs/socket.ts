@@ -24,10 +24,12 @@ export const initServerWithSocket = (app: any) => {
       connectedUsers = connectedUsers.filter((user) => {
         user.socketId !== socket.id;
       });
+      console.log("disconnects", socket.id);
     });
     // on login add to connected and emit to everybody
-    socket.on(Event.LOGIN, (user: User) => {
-      connectedUsers.push({ socketId: socket.id, userId: user.id });
+    socket.on(Event.LOGIN, (id: string) => {
+      connectedUsers.push({ socketId: socket.id, userId: id });
+      console.log(connectedUsers);
       socket.emit(
         Event.USER_CONNECTED,
         connectedUsers.map((user) => {

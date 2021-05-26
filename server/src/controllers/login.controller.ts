@@ -30,7 +30,7 @@ loginController.post("/Login", async (req, res) => {
   }
   const userId = userLogged._id;
   const token = jwt.sign({ userId }, JWT_KEY, { expiresIn: "1D" });
-  res.status(200).json({ token: token });
+  res.status(200).json({ token: token, id: userId });
 });
 
 export { loginController };
