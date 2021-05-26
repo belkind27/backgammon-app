@@ -9,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 import { FriendsListService } from '../../services/friends-list.service';
 import { GetChatsService } from '../../services/get-chats.service';
 import { SocketHandlerService } from '../../services/socket-handler.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 
 @Component({
   selector: 'app-friends-bar',
@@ -56,16 +58,23 @@ export class FriendsBarComponent implements OnInit {
   constructor(
     private getChats: GetChatsService,
     private socketService: SocketHandlerService,
-    private friendsService: FriendsListService
+    private friendsService: FriendsListService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.socketService.onInvite().subscribe((res) => {
       const name = this.friends.find((f) => f.id === res)?.name;
-      const ans = confirm(`${name} Wants To Play`);
-      if (ans) {
-        this.socketService.acceptInvite(res);
-      }
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.autoFocus = true;
+      dialogConfig.panelClass = 'dialog-note';
+      dialogConfig.data = name;
+      const ans = this.dialog.open(InviteDialogComponent, dialogConfig);
+      ans.afterClosed().subscribe((decision: boolean) => {
+        if (decision) {
+          this.socketService.acceptInvite(res);
+        }
+      });
     });
     this.friendsService.friendsList$.subscribe((res) => {
       if (res) {

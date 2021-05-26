@@ -5,10 +5,19 @@ import { FriendsBarComponent } from './components/friends-bar/friends-bar.compon
 import { MatMenuModule } from '@angular/material/menu';
 import { ChatBarComponent } from './components/chat-bar/chat-bar.component';
 import { HttpClientModule } from '@angular/common/http';
+import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 @NgModule({
-  declarations: [TopBarComponent, FriendsBarComponent, ChatBarComponent],
-  imports: [CommonModule, MatMenuModule, HttpClientModule],
+  declarations: [
+    TopBarComponent,
+    FriendsBarComponent,
+    ChatBarComponent,
+    InviteDialogComponent,
+  ],
+  entryComponents: [InviteDialogComponent],
+  imports: [CommonModule, MatMenuModule, HttpClientModule, MatDialogModule],
   exports: [TopBarComponent, FriendsBarComponent, ChatBarComponent],
 })
 export class CoreModule {}
