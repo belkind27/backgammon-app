@@ -20,15 +20,15 @@ userController.get("/find-all-users", authMiddleware, async (req, res) => {
   if (mainUser) {
     for (let index = 0; index < users.length; index++) {
       const element = users[index];
+      let isInFriendsList = false;
       if (mainUser._id.toString() !== element._id.toString()) {
-        if (mainUser.friendsIdList.length === 0) {
+        mainUser.friendsIdList.forEach((friendId) => {
+          if (friendId === element._id.toString()) {
+            isInFriendsList = true;
+          }
+        });
+        if (!isInFriendsList) {
           idsOfNonFriends.push(element._id.toString());
-        } else {
-          mainUser.friendsIdList.forEach((friendId) => {
-            if (friendId !== element._id.toString()) {
-              idsOfNonFriends.push(element._id.toString());
-            }
-          });
         }
       }
     }

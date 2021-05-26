@@ -15,8 +15,9 @@ export class FindFriendsMainComponent implements OnInit {
   }
   getFriendsList(): void {
     this.friendsService.getUsers().subscribe((res) => {
+      console.log(res);
       this.innerNames = res.map((user: any) => {
-        return { id: user.id, name: user.name };
+        return { id: user._id, name: user.name };
       });
     });
   }

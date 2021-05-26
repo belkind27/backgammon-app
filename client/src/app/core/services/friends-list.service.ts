@@ -15,11 +15,11 @@ export class FriendsListService {
   getFriends(): void {
     this.http
       .get(environment.Server_URL + 'find-friends')
-      .pipe(map((res) => res as User[]))
+      .pipe(map((res) => res as any[]))
       .subscribe((res) => {
         this.friendsList$.next(
           res?.map((friend) => {
-            return { id: friend.id, name: friend.name, isConnected: false };
+            return { id: friend._id, name: friend.name, isConnected: false };
           })
         );
       });

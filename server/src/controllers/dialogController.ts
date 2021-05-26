@@ -16,7 +16,7 @@ dialogController.get("/dialog", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const tmp = jwt.decode(token) as { [key: string]: any };
   const id1: string = tmp.userId;
-  const id2 = req.query.id2 as string;
+  const id2 = req.query.id as string;
   let dialog: IDialog | null = await findDialog(id1, id2);
   if (!dialog) {
     dialog = createDialog(id1, id2);
@@ -43,7 +43,7 @@ dialogController.post("/new-message", authMiddleware, async (req, res) => {
   const dialogid: Schema.Types.ObjectId =
     mongoose.Types.ObjectId(dialogidstring);
   const dialog: IDialog = findDialogUsingId(dialogid)!;
-  const message = req.body.message;
+  const message = req.body.msg;
   dialog.messages.push(message);
   res.status(202).send();
 });
@@ -56,7 +56,7 @@ export const findDialogUsingId = (
   let dialog1: IDialog | null = new Dialog();
   Dialog.findOne({ id: id1 }).exec(
     (err: CallbackError, dialogfromdb: IDialog | null) => {
-      if (dialogfromdb !== null) {
+      if (dialogfromdb) {
         dialog1 = dialogfromdb;
       } else {
         console.log("could not find dialog using id");

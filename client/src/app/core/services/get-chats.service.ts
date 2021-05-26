@@ -22,6 +22,11 @@ export class GetChatsService {
       });
   }
   sendMessage(id: string, message: any): void {
-    this.http.post('new-message', { dialogId: id, msg: message }).subscribe();
+    this.http
+      .post(environment.Server_URL + 'new-message', {
+        dialogId: id,
+        msg: message,
+      })
+      .subscribe();
   }
 }

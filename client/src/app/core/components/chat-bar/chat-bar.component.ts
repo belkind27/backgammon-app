@@ -20,7 +20,7 @@ export class ChatBarComponent implements OnInit {
       this.chats.push(res);
     });
     this.socketService.receiveMessage().subscribe((res) => {
-      const chat = this.chats.find((c) => c.id === res.id);
+      const chat = this.chats.find((c) => c._id === res.id);
       chat?.messages.push(res.msg);
     });
     this.socketService.onChatOpened().subscribe((res) => {
@@ -30,7 +30,7 @@ export class ChatBarComponent implements OnInit {
   }
   deleteChat(chatToDelete: Dialog): void {
     this.chats = this.chats.filter((chat) => {
-      return chat.id !== chatToDelete.id;
+      return chat._id !== chatToDelete._id;
     });
   }
   sendMessage(chat: Dialog, msgContent: string, input: any): void {
@@ -39,8 +39,8 @@ export class ChatBarComponent implements OnInit {
       senderId: chat.myId,
       time: new Date(),
     };
-    this.getChats.sendMessage(chat.id, message);
-    this.socketService.sendMessage(message, chat.friendId, chat.id);
+    this.getChats.sendMessage(chat._id, message);
+    this.socketService.sendMessage(message, chat.friendId, chat._id);
     input.value = '';
   }
 }

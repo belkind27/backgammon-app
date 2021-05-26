@@ -69,6 +69,7 @@ export class FriendsBarComponent implements OnInit {
     });
     this.friendsService.friendsList$.subscribe((res) => {
       if (res) {
+        console.log(res);
         this.friends = res;
         this.friends.forEach((friend) => {
           let connected = false;
@@ -83,6 +84,7 @@ export class FriendsBarComponent implements OnInit {
     });
     this.friendsService.getFriends();
     this.socketService.getConnectedUsersIds().subscribe((res) => {
+      console.log(res);
       this.connectedUsers = res;
       this.friends.forEach((friend) => {
         let connected = false;
@@ -105,7 +107,6 @@ export class FriendsBarComponent implements OnInit {
     this.socketService.playWithFriend(friend.id);
   }
   openChat(friend: FriendsInList): void {
-    this.getChats.getChat(friend.id);
     this.socketService.openChat(friend.id);
   }
 }

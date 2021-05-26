@@ -21,10 +21,21 @@ export const initServerWithSocket = (app: any) => {
   io.on(Event.CONNECT, (socket: Socket) => {
     // on disconnect remove user from connected
     socket.on(Event.DISCONNECT, (_) => {
-      connectedUsers = connectedUsers.filter((user) => {
+      for (let index = 0; index < connectedUsers.length; index++) {
+        const element = connectedUsers[index];
+        if (element.socketId === socket.id) {
+          connectedUsers.splice(index, 1);
+        }
+      }
+      /*      connectedUsers = connectedUsers.filter((user) => {
         user.socketId !== socket.id;
-      });
-      console.log("disconnects", socket.id);
+      }); */
+      io.emit(
+        Event.USER_CONNECTED,
+        connectedUsers.map((user) => {
+          return user.userId;
+        })
+      );
     });
     // on login add to connected and emit to everybody
     socket.on(Event.LOGIN, (id: string) => {
@@ -39,8 +50,7 @@ export const initServerWithSocket = (app: any) => {
       if (isNew) {
         connectedUsers.push({ socketId: socket.id, userId: id });
       }
-      console.log('after login',connectedUsers);
-      socket.emit(
+      io.emit(
         Event.USER_CONNECTED,
         connectedUsers.map((user) => {
           return user.userId;
@@ -95,11 +105,12 @@ export const initServerWithSocket = (app: any) => {
       const userToChat = connectedUsers.find(
         (user) => user.userId === userToChatId
       );
-      if (userToChat) {
+      const you = connectedUsers.find((user) => user.socketId === socket.id);
+      if (userToChat&&you) {
         const chatroom = uuidv4();
-        io.to(userToChat.userId).emit(`chatRoom`, {
+        io.to(userToChat.socketId).emit(`chatRoom`, {
           chat: chatroom,
-          id: socket.id,
+          id: you.userId,
         });
         io.to(socket.id).emit(`chatRoom`, {
           chat: chatroom,
