@@ -67,7 +67,7 @@ userController.get("/find-user", authMiddleware, async (req, res) => {
 userController.post("/add-friend", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const friendid = req.body.userId;
-  if (token !== undefined) {
+  if (token) {
     const tmp = jwt.decode(token) as { [key: string]: any };
     const id11: string = tmp.userId;
     makeFriend(id11, friendid);
@@ -155,11 +155,10 @@ export const makeFriend = async (
   friendId: string
 ): Promise<number> => {
   const userman: IUser | null = await findUser(id)!;
-  const friendid2 = mongoose.Types.ObjectId(friendId);
-  const friendUser: IUser | null = await findUser(friendid2);
+  const friendUser: IUser | null = await findUser(friendId);
   let friendnum: number = 0;
   if (userman) {
-    friendnum = userman.friendsIdList.push(friendid2);
+    friendnum = userman.friendsIdList.push(friendId);
     userman.save();
     friendUser?.friendsIdList.push(userman._id);
     friendUser?.save();
@@ -170,14 +169,21 @@ export const deleteFriend = async (id: string, friendId: string) => {
   const userman: IUser | null = await findUser(id)!;
   const friendUser: IUser | null = await findUser(friendId);
   if (userman) {
-    userman.friendsIdList = userman.friendsIdList.filter(
-      (idelement) => idelement !== friendId
-    );
+    for (var i = 0; i < userman.friendsIdList.length; i++) {
+      if (userman.friendsIdList[i] === friendId) {
+        userman.friendsIdList.splice(i, 1);
+        break;
+      }
+    }
     userman.save();
     if (friendUser)
-      friendUser.friendsIdList = friendUser.friendsIdList.filter(
-        (idelement) => idelement !== id
-      );
+      for (var i = 0; i < friendUser.friendsIdList.length; i++) {
+        if (friendUser.friendsIdList[i] === id) {
+          friendUser.friendsIdList.splice(i, 1);
+          break;
+        }
+      }
+    friendUser?.save();
   }
 };
 //#endregion
