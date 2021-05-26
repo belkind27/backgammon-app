@@ -18,7 +18,10 @@ export class ChatBarComponent implements OnInit {
   ngOnInit(): void {
     this.getChats.chats$.subscribe((res) => {
       this.chats.push(res);
-      this.socketService.onChatCreated(res.id);
+      if (this.getChats.isClientInit) {
+        this.socketService.onChatCreated(res.friendId);
+      }
+      this.getChats.isClientInit = false;
     });
     this.socketService.receiveMessage().subscribe((res) => {
       const chat = this.chats.find((c) => c.id === res.id);
