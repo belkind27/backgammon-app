@@ -4,7 +4,6 @@ import { IUser, User } from "../libs/dbmodels/user";
 import jwt from "jsonwebtoken";
 import { Schema } from "mongoose";
 import { authMiddleware } from "../middlewares/auth.middleware";
-import { stringify } from "uuid";
 
 const userController = express.Router();
 

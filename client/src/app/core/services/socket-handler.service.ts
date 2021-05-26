@@ -4,10 +4,15 @@ import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Color, Player } from 'src/app/modules/game-page/models';
+import { GetJwtService } from './get-jwt.service';
 
 @Injectable({ providedIn: 'root' })
 export class SocketHandlerService {
-  constructor(private socket: Socket, private router: Router) {}
+  constructor(
+    private socket: Socket,
+    private router: Router,
+    private idService: GetJwtService
+  ) {}
   playRandom(): void {
     this.socket.on(`random`, (roomName: string, color: Color) => {
       sessionStorage.setItem(
@@ -40,8 +45,8 @@ export class SocketHandlerService {
     sessionStorage.removeItem('game-config');
     this.router.navigateByUrl('Home');
   }
-  login(user: any): void {
-    this.socket.emit('login', user);
+  login(id: string): void {
+    this.socket.emit('login', id);
   }
   getConnectedUsersIds(): Observable<string[]> {
     return this.socket.fromEvent('userConnected');
@@ -82,5 +87,13 @@ export class SocketHandlerService {
   }
   acceptInvite(id: string): void {
     this.socket.emit('acceptInvite', id);
+  }
+  onConnection(): void {
+    this.socket.on('connect', () => {
+      const id = this.idService.getId();
+      if (id) {
+        this.login(id);
+      }
+    });
   }
 }

@@ -24,7 +24,8 @@ export class LoginMainComponent implements OnInit {
       .subscribe((res) => {
         if (res.token) {
           this.tokenService.setToken(res.token);
-          this.socketService.login(res.id)
+          this.tokenService.setId(res.id);
+          this.socketService.login(res.id);
           this.router.navigateByUrl('Home');
         } else {
           alert('Something went wrong please try later');

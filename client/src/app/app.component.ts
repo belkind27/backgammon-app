@@ -4,6 +4,7 @@ import { NavigationStart, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { GetJwtService } from './core/services/get-jwt.service';
+import { SocketHandlerService } from './core/services/socket-handler.service';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,11 @@ export class AppComponent implements OnInit {
   constructor(
     private jwtService: GetJwtService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private socketService: SocketHandlerService
   ) {}
   ngOnInit(): void {
+    this.socketService.onConnection();
     this.router.events
       .pipe(filter((event) => event instanceof NavigationStart))
       .subscribe((_) => {
@@ -39,7 +42,7 @@ export class AppComponent implements OnInit {
           return res as any;
         })
       )
-      .subscribe((res) => {        
+      .subscribe((res) => {
         const userName1 = res.name;
         let wins1;
         let loses1;

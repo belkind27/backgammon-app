@@ -28,7 +28,17 @@ export const initServerWithSocket = (app: any) => {
     });
     // on login add to connected and emit to everybody
     socket.on(Event.LOGIN, (id: string) => {
-      connectedUsers.push({ socketId: socket.id, userId: id });
+      let isNew = true;
+      for (let index = 0; index < connectedUsers.length; index++) {
+        const element = connectedUsers[index];
+        if (element.userId === id) {
+          isNew = false;
+          element.socketId = socket.id;
+        }
+      }
+      if (isNew) {
+        connectedUsers.push({ socketId: socket.id, userId: id });
+      }
       console.log(connectedUsers);
       socket.emit(
         Event.USER_CONNECTED,
