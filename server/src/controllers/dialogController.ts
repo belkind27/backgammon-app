@@ -22,10 +22,10 @@ dialogController.get("/dialog", authMiddleware, async (req, res) => {
     dialog = createDialog(id1, id2);
   }
   const friend1: IUser | null = await findUser(id2)!;
-  let clientDialog;
-  if (friend1) {
-    const friendname1 = friend1.name;
-    clientDialog = {
+
+  Promise.all([dialog, friend1]).then((values) => {
+    const friendname1 = friend1?.name;
+    let clientDialog = {
       id: dialog?._id,
       friendName: friendname1,
       myId: id1,
@@ -33,9 +33,8 @@ dialogController.get("/dialog", authMiddleware, async (req, res) => {
       show: false,
       messages: dialog?.messages,
     };
-  }
-
-  res.status(202).send(clientDialog);
+    res.status(202).send(clientDialog);
+  });
 });
 
 dialogController.post("/new-message", authMiddleware, async (req, res) => {
