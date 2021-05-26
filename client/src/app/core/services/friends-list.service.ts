@@ -30,7 +30,9 @@ export class FriendsListService {
         params: new HttpParams().set('id', id),
       })
       .subscribe((_) => {
-        this.getFriends();
+        setTimeout(() => {
+          this.getFriends();
+        }, 1000); // wait a second
       });
   }
   addFriends(id: string): Observable<any> {
