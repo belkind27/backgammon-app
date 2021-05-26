@@ -98,4 +98,14 @@ export class SocketHandlerService {
       }
     });
   }
+  onChatCreated(id: string): void {
+    this.socket.emit('chatRoomCreated', id);
+  }
+  timeToGetChat(): Observable<string> {
+    return this.socket.fromEvent('timeToGetChat').pipe(
+      map((res) => {
+        return res as string;
+      })
+    );
+  }
 }

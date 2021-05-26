@@ -124,6 +124,15 @@ export const initServerWithSocket = (app: any) => {
         });
       }
     });
+    socket.on(Event.CHAT_CREATED, (id: string) => {
+      const user = connectedUsers.find((user) => user.userId === id);
+      if (user) {
+        const yourId = connectedUsers.find(
+          (user) => user.socketId === socket.id
+        )?.userId;
+        io.to(user?.socketId).emit("timeToGetChat", yourId);
+      }
+    });
     socket.on(Event.MESSAGE, (room: string, message: any, chatId: string) => {
       io.to(room).emit(Event.MESSAGE_RECEIVED, { msg: message, id: chatId });
     });

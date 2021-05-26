@@ -37,6 +37,7 @@ export enum Event {
   PLAY_WITH_RANDOM = "playWithRandom",
   GAME_ENDED = "gameEnded",
   MESSAGE_RECEIVED = "messageReceived",
-  INVITE_RECEIVED ="inviteReceived",
-  ACCEPT_INVITE = "acceptInvite"
+  INVITE_RECEIVED = "inviteReceived",
+  ACCEPT_INVITE = "acceptInvite",
+  CHAT_CREATED = "chatRoomCreated",
 }

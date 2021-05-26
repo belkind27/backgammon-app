@@ -5,6 +5,9 @@
   bottom: 0;
   font-size: large;
 }
+button{
+  padding: 0.1em 0.8em 0.1em 0.8em;
+}
 .chat-tab {
   padding: 0.25em 5em 0.25em 5em;
 }

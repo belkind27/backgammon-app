@@ -18,15 +18,17 @@ export class ChatBarComponent implements OnInit {
   ngOnInit(): void {
     this.getChats.chats$.subscribe((res) => {
       this.chats.push(res);
+      this.socketService.onChatCreated(res.id);
     });
     this.socketService.receiveMessage().subscribe((res) => {
-      console.log('recived', res);
       const chat = this.chats.find((c) => c.id === res.id);
       chat?.messages.push(res.msg);
     });
     this.socketService.onChatOpened().subscribe((res) => {
       sessionStorage.setItem(res.id, res.chat);
-      this.getChats.getChat(res.id);
+    });
+    this.socketService.timeToGetChat().subscribe((res) => {
+      this.getChats.getChat(res);
     });
   }
   deleteChat(chatToDelete: Dialog): void {
