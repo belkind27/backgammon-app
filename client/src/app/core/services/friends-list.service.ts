@@ -34,14 +34,9 @@ export class FriendsListService {
       });
   }
   addFriends(id: string): Observable<any> {
-    const result = this.http.post(environment.Server_URL + 'add-friend', {
+    return this.http.post(environment.Server_URL + 'add-friend', {
       userId: id,
     });
-    setTimeout(() => {
-      console.log('waiting for db to update');
-    }, 1000); // wait a second
-    console.log('done waiting');
-    return result;
   }
   getUsers(): Observable<any> {
     return this.http

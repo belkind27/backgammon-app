@@ -29,8 +29,12 @@ export class FindFriendsMainComponent implements OnInit {
     this.filteredNames = [];
     alert(`${friend.name} Added To Friends`);
     this.friendsService.addFriends(friend.id).subscribe((_) => {
-      this.getFriendsList();
-      this.friendsService.getFriends();
+      setTimeout(() => {
+        console.log('waiting for db to update');
+        this.getFriendsList();
+        this.friendsService.getFriends();
+      }, 1000); // wait a second
+      console.log('done waiting');
     });
   }
   private _filter(value: string, data: Friend[]): Friend[] {
