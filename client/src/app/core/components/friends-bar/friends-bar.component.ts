@@ -109,6 +109,7 @@ export class FriendsBarComponent implements OnInit {
   openChat(friend: FriendsInList): void {
     this.socketService.openChat(friend.id);
     this.getChats.getChat(friend.id);
+    this.getChats.isClientInit = true;
   }
 }
 export interface FriendsInList {

@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 export class GetChatsService {
   constructor(private http: HttpClient) {}
   chats$: Subject<Dialog> = new Subject();
+  isClientInit = false;
   getChat(id: string): void {
     this.http
       .get(environment.Server_URL + 'dialog', {
