@@ -371,6 +371,25 @@ export class GameMainComponent implements OnInit {
     }
   }
   isThereAnyOptions(): boolean {
+    if (this.isInJail) {
+      const jailOp1 = this.gameService.createSuggestion(
+        this.diceRes.dice1,
+        this.jailIndex,
+        this.playerColor,
+        this.gameBoardLogic
+      );
+      const jailOp2 = this.gameService.createSuggestion(
+        this.diceRes.dice2,
+        this.jailIndex,
+        this.playerColor,
+        this.gameBoardLogic
+      );
+      if (jailOp1 !== 100 || jailOp2 !== 100) {
+        return true;
+      } else {
+        return false;
+      }
+    }
     if (this.diceRes.dice1 === 0 && this.diceRes.dice2 === 0) {
       return false;
     } else {

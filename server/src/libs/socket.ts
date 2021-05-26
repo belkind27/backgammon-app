@@ -92,6 +92,8 @@ export const initServerWithSocket = (app: any) => {
         (user) => user.userId === userToPlayId
       );
       if (userToPlay) {
+        socket.join(playroom);
+        userToPlay.socket.join(playroom);
         io.to(userToPlay.socketId).emit(`play`, playroom, "black");
         io.to(socket.id).emit(`play`, playroom, "white");
       }
