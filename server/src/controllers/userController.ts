@@ -16,15 +16,24 @@ userController.get("/find-all-users", authMiddleware, async (req, res) => {
   const id11 = tmp.userId;
 
   let users: Array<IUser> = await User.find();
+  let tmpUsers: Array<IUser> = [];
   let mainuser: IUser | null = await User.findOne({ _id: id11 }).exec();
   if (mainuser) {
-    users = users.filter((userelement) => userelement._id !== mainuser?._id);
+    for (let index = 0; index < users.length; index++) {
+      const element = users[index];
+      if (element._id == mainuser?._id) users = users.splice(index, 1);
+    }
+
+    /* users.forEach((item, index) => {
+      if (item._id == mainuser?._id) users = users.splice(index, 1);
+    });*/
     if (mainuser.name)
       // user is not null
       mainuser.friendsIdList.forEach((friendelement) => {
-        users = users.filter(
-          (userelement) => userelement._id !== friendelement
-        );
+        users.forEach((item, index) => {
+          let friendElementId = mongoose.Types.ObjectId(friendelement);
+          if (item._id == friendElementId) users = users.splice(index, 1);
+        });
       });
   }
   res.status(202).send(users);
@@ -32,19 +41,13 @@ userController.get("/find-all-users", authMiddleware, async (req, res) => {
 
 userController.get("/find-friends", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
-  let user1: IUser | null;
-  let friends: Array<IUser> | null = null;
-  if (token !== undefined) {
+  if (token) {
     const tmp = jwt.decode(token) as { [key: string]: any };
     const id11: string = tmp.userId;
-    user1 = await findUser(id11);
-    user1?.friendsIdList.forEach(async (friendelementid) => {
-      let friend: IUser | null = await findUser(friendelementid);
-      if (friend) friends?.push(friend);
-    }); // if friend exist then push it into arrey
-  } else console.log("token undefined");
-
-  res.send(friends);
+    findFriends(id11).then((friends3) => {
+      res.send(friends3);
+    });
+  } else res.status(202).send();
 });
 
 userController.get("/find-user", authMiddleware, async (req, res) => {
@@ -100,7 +103,7 @@ userController.post("/game-result", authMiddleware, async (req, res) => {
 
 userController.delete("/delete-friend", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
-  const friendid: string= req.query.id as string;
+  const friendid: string = req.query.id as string;
   //probably not much of a friend
   if (token !== undefined) {
     const tmp = jwt.decode(token) as { [key: string]: any };
@@ -128,6 +131,19 @@ export const findUserbydetails = async (
   password1: string
 ): Promise<IUser | null> => {
   return User.findOne({ name: name1, password: password1 }).exec();
+};
+
+export const findFriends = async (myId: string): Promise<IUser[]> => {
+  let friends: Array<IUser> | null = [];
+  const user1 = await findUser(myId);
+  if (user1)
+    for (let index = 0; index < user1?.friendsIdList.length; index++) {
+      const element = user1?.friendsIdList[index];
+      let friend: IUser | null = await User.findById(element);
+      if (friend) friends?.push(friend);
+    }
+  return friends;
+  // return await Promise.all(friends);
 };
 
 // the function also returns the number of friends U have, to remind U that you're lonely :)
