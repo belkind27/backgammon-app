@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { GetJwtService } from '../../services/get-jwt.service';
@@ -10,34 +10,17 @@ import { GetJwtService } from '../../services/get-jwt.service';
   styleUrls: ['./top-bar.component.css'],
 })
 export class TopBarComponent implements OnInit {
-  constructor(private http: HttpClient, private jwtService: GetJwtService) {}
+  constructor() {}
+  @Input() set user(user: any) {
+    if (user) {
+      this.userName = user.userName;
+      this.wins = user.wins;
+      this.loses = user.loses;
+    }
+  }
   userName!: string;
   wins!: number;
   loses!: number;
 
-  ngOnInit(): void {
-    const token = this.jwtService.getToken();
-    if (token) {
-      this.http
-        .get(environment.Server_URL + 'find-user')
-        .pipe(
-          map((res) => {
-            return res as any;
-          })
-        )
-        .subscribe((res) => {
-          this.userName = res.name;
-          if (!res.wins) {
-            this.wins = 0;
-          } else {
-            this.wins = res.wins;
-          }
-          if (!res.loses) {
-            this.loses = 0;
-          } else {
-            this.loses = res.loses;
-          }
-        });
-    }
-  }
+  ngOnInit(): void {}
 }
