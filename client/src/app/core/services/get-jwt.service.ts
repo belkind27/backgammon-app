@@ -34,4 +34,10 @@ export class GetJwtService implements CanActivate {
   setToken(token: string): void {
     sessionStorage.setItem(this.key, token);
   }
+  getId(): string | null {
+    return sessionStorage.getItem('user-id');
+  }
+  setId(id: string): void {
+    sessionStorage.setItem('user-id', id);
+  }
 }

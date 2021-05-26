@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
           return res as any;
         })
       )
-      .subscribe((res) => {        
+      .subscribe((res) => {
         const userName1 = res.name;
         let wins1;
         let loses1;
