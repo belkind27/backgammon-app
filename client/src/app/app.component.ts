@@ -4,7 +4,6 @@ import { NavigationStart, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { GetJwtService } from './core/services/get-jwt.service';
-import { SocketHandlerService } from './core/services/socket-handler.service';
 
 @Component({
   selector: 'app-root',
@@ -17,11 +16,9 @@ export class AppComponent implements OnInit {
   constructor(
     private jwtService: GetJwtService,
     private router: Router,
-    private http: HttpClient,
-    private socketService: SocketHandlerService
+    private http: HttpClient
   ) {}
   ngOnInit(): void {
-    this.socketService.onConnection();
     this.router.events
       .pipe(filter((event) => event instanceof NavigationStart))
       .subscribe((_) => {

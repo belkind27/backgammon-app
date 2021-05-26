@@ -39,7 +39,7 @@ export const initServerWithSocket = (app: any) => {
       if (isNew) {
         connectedUsers.push({ socketId: socket.id, userId: id });
       }
-      console.log(connectedUsers);
+      console.log('after login',connectedUsers);
       socket.emit(
         Event.USER_CONNECTED,
         connectedUsers.map((user) => {

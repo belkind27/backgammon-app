@@ -12,7 +12,9 @@ export class SocketHandlerService {
     private socket: Socket,
     private router: Router,
     private idService: GetJwtService
-  ) {}
+  ) {
+    this.onConnection();
+  }
   playRandom(): void {
     this.socket.on(`random`, (roomName: string, color: Color) => {
       sessionStorage.setItem(
