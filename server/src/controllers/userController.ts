@@ -4,6 +4,7 @@ import { IUser, User } from "../libs/dbmodels/user";
 import jwt from "jsonwebtoken";
 import { Schema } from "mongoose";
 import { authMiddleware } from "../middlewares/auth.middleware";
+import { stringify } from "uuid";
 
 const userController = express.Router();
 
@@ -14,29 +15,27 @@ userController.get("/find-all-users", authMiddleware, async (req, res) => {
   const token: string = req.headers.authorization?.split(" ")[1]!;
   const tmp = jwt.decode(token) as { [key: string]: any };
   const id11 = tmp.userId;
-
   let users: Array<IUser> = await User.find();
-  let tmpUsers: Array<IUser> = [];
-  let mainuser: IUser | null = await User.findOne({ _id: id11 }).exec();
-  if (mainuser) {
+  let idsOfNonFriends: string[] = [];
+  let mainUser: IUser | null = await User.findOne({ _id: id11 }).exec();
+  if (mainUser) {
     for (let index = 0; index < users.length; index++) {
       const element = users[index];
-      if (element._id == mainuser?._id) users = users.splice(index, 1);
-    }
-
-    /* users.forEach((item, index) => {
-      if (item._id == mainuser?._id) users = users.splice(index, 1);
-    });*/
-    if (mainuser.name)
-      // user is not null
-      mainuser.friendsIdList.forEach((friendelement) => {
-        users.forEach((item, index) => {
-          let friendElementId = mongoose.Types.ObjectId(friendelement);
-          if (item._id == friendElementId) users = users.splice(index, 1);
+      if (mainUser._id.toString() !== element._id.toString()) {
+        mainUser.friendsIdList.forEach((friendId) => {
+          if (friendId !== element._id.toString()) {
+            idsOfNonFriends.push(element._id.toString());
+          }
         });
-      });
+      }
+    }
   }
-  res.status(202).send(users);
+  const nonFriends = [];
+  for (let index = 0; index < idsOfNonFriends.length; index++) {
+    const element = idsOfNonFriends[index];
+    nonFriends.push(await findUser(element));
+  }
+  res.status(202).send(nonFriends);
 });
 
 userController.get("/find-friends", authMiddleware, async (req, res) => {
@@ -171,8 +170,10 @@ export const deleteFriend = async (id: string, friendId: string) => {
       (idelement) => idelement !== friendId
     );
     userman.save();
-    friendUser?.friendsIdList.filter((idelement) => idelement !== userman._id);
-    friendUser?.save();
+    if (friendUser)
+      friendUser.friendsIdList = friendUser.friendsIdList.filter(
+        (idelement) => idelement !== id
+      );
   }
 };
 //#endregion
