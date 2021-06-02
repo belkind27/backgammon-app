@@ -5,8 +5,6 @@ import { loginController } from "./controllers/login.controller";
 import { userController } from "./controllers/userController";
 import { dialogController } from "./controllers/dialogController";
 const mongoose = require("mongoose");
-
-
 const app = express();
 app.use(cors());
 app.use(loginController);
