@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/aef90763-ebc4-492d-8a61-99984709e4e0/resourceGroups/backgammon-rg/providers/Microsoft.Web/sites/backgammon-server",
+    "appService.deploySubpath": "."
+}

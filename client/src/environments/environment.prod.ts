@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  Server_URL: 'https://backgammon-server.azurewebsites.net/',
 };
