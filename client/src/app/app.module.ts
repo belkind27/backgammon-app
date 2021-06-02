@@ -13,8 +13,9 @@ import { HomePageModule } from './modules/home-page/home-page.module';
 import { FindFriendsPageModule } from './modules/find-friends-page/find-friends-page.module';
 import { SetHeadersInterceptor } from './core/interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 const socketioConfig: SocketIoConfig = {
-  url: 'http://localhost:4000',
+  url: environment.Server_URL,
   options: {},
 };
 
